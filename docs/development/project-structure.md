@@ -1,0 +1,102 @@
+# Project Structure
+
+!!! success "Decided — monorepo"
+    See [ADR-001](../decisions.md#adr-001-monorepo). This page is the map of the repository. Folders marked :construction: don't exist yet; they are created during [Sprint 1](../roadmap/sprint-1.md).
+
+## Repository layout
+
+```
+tzamot/
+├── .github/
+│   ├── workflows/
+│   │   ├── ci.yml                  🚧 lint · format · migrate · seed · test · docker build (PRs)
+│   │   ├── deploy.yml              🚧 build image → GHCR → approval → SSH deploy (main)
+│   │   └── docs.yml                ✅ build + publish this site
+│   └── PULL_REQUEST_TEMPLATE.md    🚧
+│
+├── backend/                        🚧 FastAPI application (one Docker image)
+│   ├── app/
+│   │   ├── main.py                 FastAPI app factory, middleware, router registration
+│   │   ├── core/
+│   │   │   ├── config.py           Settings from environment variables
+│   │   │   ├── logging.py          Structured logging setup
+│   │   │   └── db.py               Engine, session dependency
+│   │   ├── models/                 SQLAlchemy: service.py · availability.py · appointment.py
+│   │   ├── schemas/                Pydantic request/response models
+│   │   ├── routers/                services · availability · slots · appointments · admin · health
+│   │   └── services/               Use-cases: slots.py (algorithm) · booking.py · cancellation.py
+│   ├── alembic/                    Migrations (versions/)
+│   ├── alembic.ini
+│   ├── scripts/
+│   │   └── seed_test_db.py
+│   ├── tests/
+│   │   ├── conftest.py             DB session fixture, frozen clock
+│   │   └── test_*.py
+│   ├── Dockerfile                  python:3.13-slim + uv sync --frozen
+│   ├── pyproject.toml              deps + [tool.ruff] [tool.black] [tool.pytest]
+│   ├── uv.lock                     locked versions — commit it
+│   └── .env.example                every config key with local defaults
+│
+├── frontend/                       🚧 static PWA — Cloudflare Pages root directory
+│   ├── index.html                  client booking flow
+│   ├── admin.html                  hidden admin UI
+│   ├── css/
+│   ├── js/
+│   │   ├── config.js               API base URL by hostname
+│   │   ├── api.js                  fetch wrapper, errors, spinner
+│   │   ├── strings.js              Hebrew UI copy
+│   │   ├── booking.js              client flow
+│   │   └── admin.js                admin flow
+│   ├── icons/
+│   ├── manifest.json
+│   └── sw.js                       service worker
+│
+├── infra/                          🚧 everything that runs the stack
+│   ├── docker-compose.dev.yml      local: postgres only
+│   ├── docker-compose.prod.yml     VPS: caddy + api + db
+│   ├── Caddyfile
+│   └── README.md                   VPS provisioning runbook
+│
+├── docs/                           ✅ this site
+├── mkdocs.yml                      ✅
+├── .gitignore                      ✅
+└── README.md                       ✅
+```
+
+## Conventions
+
+| Rule | Detail |
+|---|---|
+| **One image, one `backend/`** | `backend/Dockerfile` is the only image we build. Its build context is `backend/`. |
+| **`infra/` owns runtime** | Compose files, Caddyfile, and the provisioning runbook. Nothing in `infra/` is imported by Python. |
+| **Frontend has no build step** | Plain files; Cloudflare Pages serves `frontend/` as-is. |
+| **Commit `uv.lock`** | It is what makes local, CI, and Docker installs identical. |
+| **Commit `.env.example`, never `.env`** | Enforced by `.gitignore`. |
+| **Workflows use `paths:` filters** | Backend CI runs for `backend/**`; docs for `docs/**`; deploy for `backend/**` + `infra/**`. |
+
+## Everyday commands (from the repo root)
+
+| Task | Command |
+|---|---|
+| Start local DB | `docker compose -f infra/docker-compose.dev.yml up -d` |
+| Install backend deps | `cd backend && uv sync` |
+| Run API | `cd backend && uv run uvicorn app.main:app --reload` |
+| Migrate | `cd backend && uv run alembic upgrade head` |
+| Seed | `cd backend && uv run python scripts/seed_test_db.py` |
+| Test | `cd backend && uv run pytest` |
+| Lint / format | `cd backend && uv run ruff check . && uv run black --check .` |
+| Serve frontend | `cd frontend && python -m http.server 5500` (or Live Server) |
+| Serve docs | `mkdocs serve` |
+
+!!! tip
+    A `Makefile` / `justfile` wrapping these is a nice Sprint 1 stretch goal.
+
+## Monorepo vs. multi-repo (for the record)
+
+| | Monorepo (chosen) | Separate repos |
+|---|---|---|
+| PRs touching API + UI | One PR, one review | Two PRs, coordinate merges |
+| CI | Path filters | Naturally separate |
+| Cloudflare Pages | Root directory `frontend/` | Repo root |
+| Issue tracking | One board | Two boards |
+| Onboarding | One clone | Two clones |
