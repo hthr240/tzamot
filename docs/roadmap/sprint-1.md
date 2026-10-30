@@ -1,7 +1,14 @@
-# Sprint 1 — Foundation & DevOps
+# Sprint 1 — Foundation & Local Dev
 
 **Owner:** team lead, solo.
-**Goal:** a robust, production-ready development environment and CI/CD pipeline so that when the second developer joins, they can pull the repository and start writing business logic immediately.
+**Goal:** a developer can clone the repository and, in under 30 minutes, run the
+backend, database, and frontend locally, run tests, and open a PR checked by CI.
+**Budget:** no paid infrastructure; no fixed due date.
+
+Track work in the [Sprint 1 milestone](https://github.com/hthr240/tzamot/milestone/1)
+and [Project](https://github.com/users/hthr240/projects/3). The six parent stories
+cover management (#1), local backend/database (#5), logging (#12), schema/seed
+data (#16), CI (#22), and the frontend shell (#27).
 
 ## Checklist
 
@@ -10,9 +17,10 @@
 - [x] Create the GitHub repository (`hthr240/tzamot`)
 - [x] Write developer documentation (this site)
 - [x] Decide repository layout — monorepo, [ADR-001](../decisions.md#adr-001-monorepo)
-- [ ] Set up the GitHub Projects Kanban board — To Do · In Progress · Done — see [Task management](../development/task-management.md)
-- [ ] Configure branch protection for `main`: require 1 approval, require passing status checks — see [Workflow](../development/workflow.md#branch-protection-on-main)
-- [ ] Add `.github/PULL_REQUEST_TEMPLATE.md`
+- [x] Set up milestones, labels, parent/task links, estimates, dependencies, and the five-column board — #2
+- [ ] Configure solo-friendly branch protection: require PRs, zero peer approvals, block force-push/deletion — #25; see [Workflow](../development/workflow.md#branch-protection-on-main)
+- [ ] Merge story/task/bug forms and `.github/PULL_REQUEST_TEMPLATE.md` — #3
+- [ ] Align process documentation and the zero-spend scope — #4
 - [ ] Create folder skeleton: `backend/`, `frontend/`, `infra/` — see [Project structure](../development/project-structure.md)
 
 ### Local environment
@@ -21,6 +29,8 @@
 - [ ] Initialise the FastAPI project with `uv init` → `pyproject.toml` + `uv.lock` (Python 3.13)
 - [ ] `backend/.env.example` with all config keys — see [Environments → Configuration](../architecture/environments.md#configuration-per-environment)
 - [ ] `/health` endpoint
+- [ ] Frontend shell served locally on port 5500, calling the local API without CORS errors
+- [ ] One-command launcher for the DB, migrations, API, and frontend; documented stop procedure — #11
 
 ### Structured logging
 
@@ -36,15 +46,19 @@
 - [ ] Initialise Alembic and create the first baseline migration
 - [ ] `scripts/seed_test_db.py` with realistic data
 
-### CI/CD pipelines
+### CI pipelines
 
 - [ ] `.github/workflows/ci.yml`: `uv sync` → Ruff → Black → PostgreSQL service container → `alembic upgrade head` → seed → `pytest` (dummy test) → `docker build` — see [CI pipeline](../development/ci-pipeline.md)
-- [ ] Mark the `backend` CI job as a required status check on `main`
+- [ ] Require the `backend` status check only after it reports on every PR — #31, blocked by #24 and #25
 - [ ] `backend/Dockerfile` (`python:3.13-slim` + uv) — see [Backend → Dockerfile](../architecture/backend.md#dockerfile)
-- [ ] `.github/workflows/deploy.yml`: build → push to GHCR → `production` environment approval → SSH deploy — see [CI/CD](../architecture/cicd.md)
-- [ ] GitHub Environment `production` with required reviewer and secrets placeholders
-- [ ] `infra/docker-compose.prod.yml` + `infra/Caddyfile` — see [Deployment](../architecture/deployment.md)
 - [x] `.github/workflows/docs.yml` publishes this site
+
+### Deferred to Sprint 4
+
+Production deployment, the `production` GitHub Environment, production Compose,
+Caddy, VPS provisioning, and domain/DNS work belong to
+[Sprint 4](sprint-4.md#deployment-the-launch). They are not prerequisites for
+writing or testing the app locally. Do not buy hosting or a domain before MVP readiness.
 
 ### Infra design
 
@@ -61,6 +75,8 @@ A new developer can:
 2. Follow [Local setup](../development/local-setup.md) in under 30 minutes
 3. Run `pytest` green locally
 4. Open a PR and see CI run
+5. Load the frontend and verify that it calls the local API
+6. Stop and restart local services without losing database data
 
 ## Open questions
 

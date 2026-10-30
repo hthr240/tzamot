@@ -3,6 +3,11 @@
 **Team:** both developers.
 **Goal:** upgrade the website to a native-feeling mobile app, finalise edge-case features, and deploy to the live servers.
 
+!!! warning "Spending starts only after MVP readiness"
+    Finish and test the local MVP before provisioning a VPS or buying a domain.
+    Production automation and secrets are deferred here from Sprint 1; the
+    production architecture is a design, not an already running environment.
+
 ## Checklist
 
 ### PWA transformation
@@ -28,6 +33,9 @@
 
 ### Deployment — the launch
 
+- [ ] Confirm local MVP readiness and explicitly approve hosting/domain expenditure
+- [ ] `.github/workflows/deploy.yml`: build image → push to GHCR → approval → SSH deploy — see [CI/CD](../architecture/cicd.md)
+- [ ] GitHub Environment `production`, with reviewer approval where supported by the repository plan, and deployment secrets
 - [ ] Connect the repository to **Cloudflare Pages** for automatic frontend deployments
 - [ ] Provision the **Hetzner VPS** (CX22), harden SSH, install Docker
 - [ ] `docker-compose.prod.yml` with **Caddy** (reverse proxy) + **FastAPI** + **PostgreSQL** (persistent volume) — see [Deployment](../architecture/deployment.md)

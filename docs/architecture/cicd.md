@@ -2,6 +2,12 @@
 
 How code moves from a developer's laptop to production, and what checks it passes on the way.
 
+!!! info "Design, not current deployment"
+    Only the Docs workflow exists today. Backend CI is Sprint 1 work; image
+    publishing, the production Environment, deployment secrets, and SSH delivery
+    are deferred to Sprint 4. No paid hosting or domain is needed before local
+    MVP readiness.
+
 - **CI** (Continuous Integration) — *automatic checking*: every push/PR is linted and tested on a throwaway GitHub server. Defined in [`ci.yml`](../development/ci-pipeline.md).
 - **CD** (Continuous Deployment) — *automatic shipping*: after a merge to `main`, GitHub builds the Docker image and — once a human clicks **approve** — installs it on the VPS. Defined in `deploy.yml` (this page).
 
@@ -46,7 +52,7 @@ Unchanged from the [CI pipeline](../development/ci-pipeline.md) page, with two a
 
 | Addition | Why |
 |---|---|
-| **Path filter** | The `backend` job only runs when `backend/**` or the workflow changes; docs-only or frontend-only PRs don't wait on Python tests. |
+| **Required-check reporting** | Backend/infra changes must be covered. If expensive work is conditional, still report the required result on every PR; a workflow skipped by path filters cannot safely be required. |
 | **`docker build` step** | Catches a broken `Dockerfile` *before* merge, so `deploy.yml` never fails on build. The image is built but **not pushed**. |
 
 Dependencies are installed with **`uv sync --frozen`** from `uv.lock`, so CI uses exactly the versions developers have locally.

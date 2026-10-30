@@ -1,7 +1,10 @@
 # Project Structure
 
 !!! success "Decided — monorepo"
-    See [ADR-001](../decisions.md#adr-001-monorepo). This page is the map of the repository. Folders marked :construction: don't exist yet; they are created during [Sprint 1](../roadmap/sprint-1.md).
+    See [ADR-001](../decisions.md#adr-001-monorepo). This page maps the target
+    repository. Items marked :construction: are not implemented yet. Local/CI
+    scaffolding belongs to [Sprint 1](../roadmap/sprint-1.md); production
+    deployment files belong to [Sprint 4](../roadmap/sprint-4.md).
 
 ## Repository layout
 
@@ -10,9 +13,10 @@ tzamot/
 ├── .github/
 │   ├── workflows/
 │   │   ├── ci.yml                  🚧 lint · format · migrate · seed · test · docker build (PRs)
-│   │   ├── deploy.yml              🚧 build image → GHCR → approval → SSH deploy (main)
+│   │   ├── deploy.yml              🚧 Sprint 4: image → GHCR → approval → SSH
 │   │   └── docs.yml                ✅ build + publish this site
-│   └── PULL_REQUEST_TEMPLATE.md    🚧
+│   ├── ISSUE_TEMPLATE/            story.yml · task.yml · bug.yml
+│   └── PULL_REQUEST_TEMPLATE.md
 │
 ├── backend/                        🚧 FastAPI application (one Docker image)
 │   ├── app/
@@ -53,8 +57,8 @@ tzamot/
 │
 ├── infra/                          🚧 everything that runs the stack
 │   ├── docker-compose.dev.yml      local: postgres only
-│   ├── docker-compose.prod.yml     VPS: caddy + api + db
-│   ├── Caddyfile
+│   ├── docker-compose.prod.yml     Sprint 4: VPS, caddy + api + db
+│   ├── Caddyfile                   Sprint 4
 │   └── README.md                   VPS provisioning runbook
 │
 ├── docs/                           ✅ this site
@@ -72,7 +76,7 @@ tzamot/
 | **Frontend has no build step** | Plain files; Cloudflare Pages serves `frontend/` as-is. |
 | **Commit `uv.lock`** | It is what makes local, CI, and Docker installs identical. |
 | **Commit `.env.example`, never `.env`** | Enforced by `.gitignore`. |
-| **Workflows use `paths:` filters** | Backend CI runs for `backend/**`; docs for `docs/**`; deploy for `backend/**` + `infra/**`. |
+| **Do not require a skipped workflow** | Docs uses path filters. A future required backend check must report on every PR; see [CI pipeline](ci-pipeline.md). Production deploy is deferred to Sprint 4. |
 
 ## Everyday commands (from the repo root)
 

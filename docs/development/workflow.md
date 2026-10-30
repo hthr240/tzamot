@@ -2,6 +2,10 @@
 
 We use **GitHub Flow**: one long-lived branch (`main`), short-lived feature branches, pull requests for everything.
 
+Code changes go through PRs. Verified non-code configuration tasks can close
+without a PR. These are team working rules; branch protection is still pending
+in [#25](https://github.com/hthr240/tzamot/issues/25).
+
 ## The flow
 
 ```mermaid
@@ -20,17 +24,27 @@ gitGraph
     merge feature/13-availability-api id: "PR #16"
 ```
 
-1. **Pick an issue** on the Kanban board and assign yourself. Move it to **In Progress**.
+1. **Pick one task**, read its acceptance criteria and blocked-by links, assign
+   yourself, and move it to **In Progress**.
 2. **Branch from `main`**:
-   ```bash
-   git checkout main && git pull
-   git checkout -b feature/12-services-crud
+   ```powershell
+   git switch main
+   git pull --ff-only
+   git switch -c chore/6-project-skeleton
    ```
-3. **Commit** small, focused changes. Run `ruff`, `black`, and `pytest` locally before pushing.
-4. **Push and open a PR** against `main`. Include `Resolves #12` in the description.
-5. **CI runs** automatically — see [CI pipeline](ci-pipeline.md). Fix anything red.
-6. **The other developer reviews.** Address comments, push fixes.
-7. **Merge** once approved and green. Delete the branch. GitHub moves the issue to **Done**.
+   Stop if synchronization fails; do not overwrite local work or force-push.
+3. **Implement and validate** the ticket. Run only applicable checks: strict
+   MkDocs for docs, and Ruff, Black, and pytest once the backend exists.
+4. **Commit, push, and open a PR** against `main`. Include `Resolves #6` for
+   this example and describe validation results.
+5. **Move the issue to In Review manually.** Check any triggered CI results;
+   not every file currently triggers a workflow.
+6. **Obtain the agreed approval.** While solo, inspect your own diff and checks;
+   agent-assisted work also waits for the user's approval. GitHub does not allow
+   approving your own PR. Once another developer joins, request their review.
+7. **Merge** after approval and applicable checks pass. Confirm that the task
+   closes and moves to Done. Delete the merged branch and sync `main` before
+   starting the next task. Close the parent story only when all its criteria hold.
 
 ## Branch naming
 
@@ -56,14 +70,10 @@ guarantees it.
 
 ## Pull request checklist
 
-Copy into the PR description (a template will live in `.github/PULL_REQUEST_TEMPLATE.md`):
-
-- [ ] `Resolves #<issue>` linked
-- [ ] Tests added / updated for any business rule touched
-- [ ] Alembic migration included if models changed
-- [ ] Log events added for new state changes
-- [ ] Docs updated if behaviour, setup, or API changed
-- [ ] Ran `ruff check .`, `black --check .`, `pytest` locally
+Use the [PR template](https://github.com/hthr240/tzamot/blob/main/.github/PULL_REQUEST_TEMPLATE.md).
+It links the task and checks tests, migrations, logging, docs, and applicable
+validation commands. Explain non-applicable checks; do not claim that backend
+tests ran before the backend exists.
 
 ## Code review guidelines
 
@@ -80,21 +90,31 @@ Copy into the PR description (a template will live in `.github/PULL_REQUEST_TEMP
 - Prefer questions over commands. Mark nits as `nit:`.
 - Approve when it's *good enough and safe*, not perfect.
 
-!!! success "Why mandatory review with only two developers?"
-    It guarantees both of you understand the whole codebase, catches logic bugs early, and prevents knowledge silos. If one person is unavailable, the other can ship.
+!!! info "Solo now, peer review later"
+    Solo development uses PRs and explicit approval without requiring a second
+    person's GitHub review. With two developers, require one peer approval to
+    share knowledge and catch bugs. Under that policy an unavailable reviewer
+    means waiting, not silently bypassing protection.
 
 ## Branch protection on `main`
 
-Configured by the team lead under **Settings → Branches → Add rule** for `main`:
+The repository is **public**, but `main` is **not protected yet**. Anyone can
+read or fork public code; only authorized collaborators can push to this
+repository or merge its PRs. The private Project has separate access controls.
 
-| Setting | Value |
-|---|---|
-| Require a pull request before merging | ✅ |
-| Required approvals | **1** |
-| Dismiss stale approvals when new commits are pushed | ✅ recommended |
-| Require status checks to pass before merging | ✅ — select the CI job |
-| Require branches to be up to date before merging | ✅ recommended |
-| Do not allow bypassing the above settings | ✅ (applies to admins too) |
-| Allow force pushes / deletions | ❌ |
+The approved policy is implemented separately in
+[#25](https://github.com/hthr240/tzamot/issues/25), under repository
+**Settings → Branches / Rules → main**:
 
-Result: **`main` is always stable and always deployable.**
+| Setting | Initial solo policy | Later |
+|---|---|---|
+| Require PRs before merging | Yes, including administrators | Keep |
+| Required peer approvals | Zero; self-approval is not possible | One when the second developer joins |
+| Force-push and branch deletion | Block | Keep |
+| Required backend check | None until backend CI exists | Configure through [#31](https://github.com/hthr240/tzamot/issues/31), after #24 |
+| Admin bypass | Disabled | Keep |
+
+Do not require the path-filtered **Docs** workflow on every PR: files outside
+its paths do not trigger it. Before making a backend check required, ensure it
+reports a result on every PR, including docs-only changes. See the
+[CI pipeline](ci-pipeline.md) for that distinction.
