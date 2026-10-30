@@ -29,7 +29,7 @@ flowchart LR
 
 | Sprint | Status |
 |---|---|
-| Sprint 1 | :hourglass_flowing_sand: Board, templates, ordered work queue and solo protection ready; app scaffolding and local stack not implemented yet |
+| Sprint 1 | :hourglass_flowing_sand: GitHub workflow and directory scaffold ready; API, frontend UI, local database and backend CI still pending |
 | Sprint 2 | :white_circle: Not started |
 | Sprint 3 | :white_circle: Not started |
 | Sprint 4 | :white_circle: Not started |

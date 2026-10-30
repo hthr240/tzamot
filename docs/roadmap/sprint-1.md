@@ -22,7 +22,7 @@ data (#16), CI (#22), and the frontend shell (#27).
 - [x] Merge story/task/bug forms and `.github/PULL_REQUEST_TEMPLATE.md` — #3
 - [x] Align process documentation and the zero-spend scope — #4
 - [x] Record the dependency-respecting task sequence in the Project's Work queue and Execution order field
-- [ ] Create folder skeleton: `backend/`, `frontend/`, `infra/` — see [Project structure](../development/project-structure.md)
+- [x] Create folder skeleton: `backend/`, `frontend/`, `infra/` — #6; see [Project structure](../development/project-structure.md)
 
 ### Local environment
 
