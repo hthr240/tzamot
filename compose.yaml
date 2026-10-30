@@ -1,0 +1,4 @@
+name: tzamot-dev
+
+include:
+  - infra/docker-compose.dev.yml

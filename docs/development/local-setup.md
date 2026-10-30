@@ -39,22 +39,37 @@ cd tzamot
 ### 2. Start the database
 
 ```powershell
-docker compose -f infra\docker-compose.dev.yml up -d --wait --wait-timeout 60
-docker compose -f infra\docker-compose.dev.yml ps
+docker compose up -d --wait
+docker compose ps
 ```
 
 This starts **only PostgreSQL 16** and waits for it to be healthy. The port is
 bound to `127.0.0.1:5432`, not exposed to the LAN. Database, user, and password
 are all `tzamot`: fake local defaults, never production credentials.
 
-The [Compose file](https://github.com/hthr240/tzamot/blob/main/infra/docker-compose.dev.yml)
-defines project `tzamot-dev` and named volume `pg_dev_data` (normally
+The root [compose.yaml](https://github.com/hthr240/tzamot/blob/main/compose.yaml)
+imports the [development configuration](https://github.com/hthr240/tzamot/blob/main/infra/docker-compose.dev.yml).
+Run the short commands from the repository root with current Docker Desktop
+and Compose `include` support. This starts the database only, not the future
+API/frontend launcher.
+
+The configuration defines project `tzamot-dev` and named volume `pg_dev_data` (normally
 `tzamot-dev_pg_dev_data`). Data survives both restarts and container recreation.
 The first start downloads the image if necessary. No Python environment or
 paid infrastructure is needed to run this database.
 
+The existing explicit startup command remains compatible and uses the same
+data. It is also available on Compose versions without `include`:
+
 ```powershell
-docker compose -f infra\docker-compose.dev.yml exec db psql -U tzamot -d tzamot
+docker compose -f infra\docker-compose.dev.yml up -d --wait --wait-timeout 60
+```
+
+Add `--wait-timeout 60` to the short command for an explicit startup deadline.
+To connect:
+
+```powershell
+docker compose exec db psql -U tzamot -d tzamot
 ```
 
 Use `\q` to exit the SQL prompt. The API's database session and migrations are
@@ -147,7 +162,7 @@ Serve the `frontend/` directory with any static server:
 ## Daily routine
 
 ```bash
-docker compose -f infra\docker-compose.dev.yml up -d --wait --wait-timeout 60
+docker compose up -d --wait
 cd backend && uv run uvicorn app.main:app --reload       # API
 # + Live Server for the frontend
 ```
@@ -164,7 +179,7 @@ This updates `pyproject.toml` **and** `uv.lock`. Commit both.
 
 ## Verify everything works
 
-- [ ] `docker compose -f infra\docker-compose.dev.yml ps` → `healthy`
+- [ ] `docker compose ps` → `healthy`
 - [ ] `uv run alembic current` shows the latest revision
 - [ ] <http://localhost:8000/docs> loads
 - [ ] `uv run pytest` passes
@@ -176,7 +191,7 @@ This updates `pyproject.toml` **and** `uv.lock`. Commit both.
 Stopping normally keeps data:
 
 ```powershell
-docker compose -f infra\docker-compose.dev.yml down
+docker compose down
 ```
 
 !!! danger "Deleting local data is explicit and irreversible"
@@ -185,8 +200,8 @@ docker compose -f infra\docker-compose.dev.yml down
     file or an unrelated project name for this reset.
 
 ```powershell
-docker compose -p tzamot-dev -f infra\docker-compose.dev.yml down --volumes
-docker compose -p tzamot-dev -f infra\docker-compose.dev.yml up -d --wait --wait-timeout 60
+docker compose -p tzamot-dev down --volumes
+docker compose -p tzamot-dev up -d --wait
 ```
 
 After migrations and seeding exist, repeat steps 5 and 6 after a reset.

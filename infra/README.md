@@ -9,9 +9,23 @@ and app launcher remain later tickets.
 With Docker Desktop running, execute from the repository root:
 
 ```powershell
-docker compose -f infra\docker-compose.dev.yml up -d --wait --wait-timeout 60
-docker compose -f infra\docker-compose.dev.yml ps
+docker compose up -d --wait
+docker compose ps
 ```
+
+The root [compose.yaml](../compose.yaml) is the default development entry point.
+It imports [docker-compose.dev.yml](docker-compose.dev.yml), so the database
+settings are not duplicated. Use current Docker Desktop with Compose `include`
+support. The original explicit command also works, including on older Compose
+versions without `include`:
+
+```powershell
+docker compose -f infra\docker-compose.dev.yml up -d --wait --wait-timeout 60
+```
+
+Both entry points use the same project and volume. You can start with one and
+stop with the other without switching databases. Add `--wait-timeout 60` to the
+short command if you want an explicit startup deadline.
 
 The first start pulls `postgres:16` if it is not already available. Startup
 waits for the database health check; an unhealthy or unavailable service fails
@@ -29,7 +43,7 @@ These are public local-development defaults, never production credentials.
 Connect using the PostgreSQL client inside the container:
 
 ```powershell
-docker compose -f infra\docker-compose.dev.yml exec db psql -U tzamot -d tzamot
+docker compose exec db psql -U tzamot -d tzamot
 ```
 
 Exit the SQL prompt with `\q`.
@@ -37,8 +51,8 @@ Exit the SQL prompt with `\q`.
 ## Stop versus reset
 
 ```powershell
-docker compose -f infra\docker-compose.dev.yml stop db
-docker compose -f infra\docker-compose.dev.yml down
+docker compose stop db
+docker compose down
 ```
 
 Both preserve database data in the named volume. Starting again reuses it,
@@ -49,8 +63,8 @@ local `tzamot-dev` project. The explicit project name prevents an environment
 override from targeting a different Compose project.
 
 ```powershell
-docker compose -p tzamot-dev -f infra\docker-compose.dev.yml down --volumes
-docker compose -p tzamot-dev -f infra\docker-compose.dev.yml up -d --wait --wait-timeout 60
+docker compose -p tzamot-dev down --volumes
+docker compose -p tzamot-dev up -d --wait
 ```
 
 Do not delete another project's volumes or stop an unrelated service if port
