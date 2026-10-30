@@ -48,6 +48,7 @@ Do not close a story just because one task merged.
 | **Board** | Issues across milestones, in Status columns |
 | **Sprint 1** | Sprint 1 issues, in Status columns and grouped by parent story |
 | **Backlog** | Open issues with no milestone; currently it may be empty |
+| **Work queue** | Open Sprint 1 tasks in the agreed execution order, without parent-story grouping |
 
 **Milestone membership and Status are independent.** For example, an issue can
 belong to Sprint 1 while its Status is Backlog. The Backlog *view* instead filters
@@ -58,6 +59,43 @@ new issues enter Backlog, closing moves them to Done, and reopening moves them
 to To Do. Sub-issue auto-add and PR-merged workflows are also enabled.
 PR-linked In Review automation is disabled, so move the issue there manually.
 Auto-close is enabled too; only use Done for genuinely completed work.
+
+### Execution order
+
+Start from the [Work queue](https://github.com/users/hthr240/projects/3/views/5).
+Its `Execution order` number mirrors the manual row order. It is not the issue
+number, estimate, or an automatically calculated priority. The existing views
+are preserved. Completed tasks disappear from this view but keep their number.
+
+| Execution order | Task |
+|---|---|
+| 1 | #25 — initial solo branch protection and its documentation |
+| 2 | #6 — project skeleton |
+| 3 | #7 — local PostgreSQL |
+| 4 | #8 — Python/uv and development tools |
+| 5 | #9 — environment settings |
+| 6 | #10 — FastAPI health endpoint and first test |
+| 7 | #23 — backend Docker image |
+| 8 | #13 — logging library decision |
+| 9 | #14 — request logging |
+| 10 | #15 — exception logging |
+| 11 | #17 — weekly-hours model decision |
+| 12 | #18 — database sessions and test isolation |
+| 13 | #19 — database models |
+| 14 | #20 — migrations |
+| 15 | #21 — seed data |
+| 16 | #24 — backend CI |
+| 17 | #31 — require the available backend check |
+| 18 | #28 — frontend shell |
+| 19 | #29 — local CORS |
+| 20 | #11 — complete local launcher |
+| 21 | #26 — optional pre-commit stretch work |
+
+This sequence respects native prerequisite links. Do not invent dependencies
+just to force this order. Ask before changing the plan, then update both the
+number field and manual row order. New issues are not automatically ranked.
+Finish and review one task before starting the next; the assistant explains
+each phase and waits for approval as described in the [workflow](workflow.md#approval-before-work).
 
 ## Issue conventions
 

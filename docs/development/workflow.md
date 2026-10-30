@@ -3,8 +3,21 @@
 We use **GitHub Flow**: one long-lived branch (`main`), short-lived feature branches, pull requests for everything.
 
 Code changes go through PRs. Verified non-code configuration tasks can close
-without a PR. These are team working rules; branch protection is still pending
-in [#25](https://github.com/hthr240/tzamot/issues/25).
+without a PR. `main` is protected by the solo policy recorded in
+[#25](https://github.com/hthr240/tzamot/issues/25) and
+[ADR-009](../decisions.md#adr-009-solo-main-protection-and-user-controlled-pr-merges).
+
+## Approval before work
+
+Before any assistant work phase, including a read-only audit, explain the
+specific scope, files/settings involved, validation, and intended GitHub actions.
+Wait for explicit user approval, then perform only those approved actions.
+Stop and ask again before creating a ticket, making an unexpected repair, or
+expanding scope. Opening a PR is not permission to merge it.
+
+The assistant leaves PRs open for the user to inspect and merge unless the user
+explicitly requests a merge. Chat approval of implementation is not a GitHub
+Approve review and does not automatically authorize merging.
 
 ## The flow
 
@@ -42,7 +55,8 @@ gitGraph
 6. **Obtain the agreed approval.** While solo, inspect your own diff and checks;
    agent-assisted work also waits for the user's approval. GitHub does not allow
    approving your own PR. Once another developer joins, request their review.
-7. **Merge** after approval and applicable checks pass. Confirm that the task
+7. **The user reviews and merges** after applicable checks pass. The assistant
+   does not merge without an explicit request. Confirm that the task
    closes and moves to Done. Delete the merged branch and sync `main` before
    starting the next task. Close the parent story only when all its criteria hold.
 
@@ -98,15 +112,14 @@ tests ran before the backend exists.
 
 ## Branch protection on `main`
 
-The repository is **public**, but `main` is **not protected yet**. Anyone can
+The repository is **public**, and `main` has an active classic branch-protection
+rule. Anyone can
 read or fork public code; only authorized collaborators can push to this
 repository or merge its PRs. The private Project has separate access controls.
 
-The approved policy is implemented separately in
-[#25](https://github.com/hthr240/tzamot/issues/25), under repository
-**Settings → Branches / Rules → main**:
+The active policy is visible under repository **Settings → Branches → main**:
 
-| Setting | Initial solo policy | Later |
+| Setting | Active solo policy | Later |
 |---|---|---|
 | Require PRs before merging | Yes, including administrators | Keep |
 | Required peer approvals | Zero; self-approval is not possible | One when the second developer joins |
@@ -118,3 +131,10 @@ Do not require the path-filtered **Docs** workflow on every PR: files outside
 its paths do not trigger it. Before making a backend check required, ensure it
 reports a result on every PR, including docs-only changes. See the
 [CI pipeline](ci-pipeline.md) for that distinction.
+
+With zero required peer approvals, the owner can inspect a PR and click Merge
+without submitting a formal Approve review. When `gh` uses the owner's account,
+GitHub treats that owner as the PR author and does not allow self-approval.
+Branch protection cannot distinguish the owner from automation using the same
+account; the assistant's approval/merge boundary is a working agreement, not a
+separate GitHub identity or permission.
