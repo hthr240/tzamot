@@ -18,9 +18,10 @@ data (#16), CI (#22), and the frontend shell (#27).
 - [x] Write developer documentation (this site)
 - [x] Decide repository layout — monorepo, [ADR-001](../decisions.md#adr-001-monorepo)
 - [x] Set up milestones, labels, parent/task links, estimates, dependencies, and the five-column board — #2
-- [ ] Configure solo-friendly branch protection: require PRs, zero peer approvals, block force-push/deletion — #25; see [Workflow](../development/workflow.md#branch-protection-on-main)
-- [ ] Merge story/task/bug forms and `.github/PULL_REQUEST_TEMPLATE.md` — #3
-- [ ] Align process documentation and the zero-spend scope — #4
+- [x] Configure solo-friendly branch protection: require PRs, zero peer approvals, block force-push/deletion — #25; see [Workflow](../development/workflow.md#branch-protection-on-main)
+- [x] Merge story/task/bug forms and `.github/PULL_REQUEST_TEMPLATE.md` — #3
+- [x] Align process documentation and the zero-spend scope — #4
+- [x] Record the dependency-respecting task sequence in the Project's Work queue and Execution order field
 - [ ] Create folder skeleton: `backend/`, `frontend/`, `infra/` — see [Project structure](../development/project-structure.md)
 
 ### Local environment
