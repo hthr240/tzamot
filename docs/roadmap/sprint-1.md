@@ -26,7 +26,7 @@ data (#16), CI (#22), and the frontend shell (#27).
 
 ### Local environment
 
-- [ ] Write `infra/docker-compose.dev.yml` running a local PostgreSQL — see [Local setup](../development/local-setup.md)
+- [x] Write `infra/docker-compose.dev.yml` running local PostgreSQL 16, with health checks and persistent data — #7; see [Local setup](../development/local-setup.md)
 - [ ] Initialise the FastAPI project with `uv init` → `pyproject.toml` + `uv.lock` (Python 3.13)
 - [ ] `backend/.env.example` with all config keys — see [Environments → Configuration](../architecture/environments.md#configuration-per-environment)
 - [ ] `/health` endpoint

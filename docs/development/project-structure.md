@@ -6,7 +6,7 @@
     scaffolding belongs to [Sprint 1](../roadmap/sprint-1.md); production
     deployment files belong to [Sprint 4](../roadmap/sprint-4.md).
 
-## Current scaffold
+## Current foundation
 
 The directory skeleton from #6 exists:
 
@@ -14,12 +14,15 @@ The directory skeleton from #6 exists:
   packages have empty `__init__.py` files.
 - `backend/tests/` and `backend/scripts/` have `.gitkeep` placeholders.
 - `frontend/css/`, `frontend/js/`, and `frontend/icons/` have `.gitkeep` placeholders.
-- `infra/README.md` describes the runtime directory's scope.
+- `infra/docker-compose.dev.yml` runs local PostgreSQL 16 with a health check,
+  localhost-only port, and persistent named volume.
+- `infra/README.md` documents startup, connection, stop, and destructive reset.
 
 The layout below is the **target**, not an inventory of implemented modules.
-FastAPI, database configuration, migrations, UI files, dependency manifests,
-Dockerfiles, Compose, and the app launcher are still later tickets. The empty
-packages do not provide a running application.
+FastAPI, application database sessions, migrations, UI files, dependency
+manifests, Dockerfiles, production Compose, and the app launcher are still
+later tickets. The database is usable independently; the empty packages do not
+provide a running application.
 
 ## Repository layout
 
@@ -70,11 +73,11 @@ tzamot/
 │   ├── manifest.json
 │   └── sw.js                       service worker
 │
-├── infra/                          README exists; runtime configuration planned
+├── infra/                          local Postgres Compose ready; production planned
 │   ├── docker-compose.dev.yml      local: postgres only
 │   ├── docker-compose.prod.yml     Sprint 4: VPS, caddy + api + db
 │   ├── Caddyfile                   Sprint 4
-│   └── README.md                   current scope; production runbook comes later
+│   └── README.md                   local database runbook; production comes later
 │
 ├── docs/                           ✅ this site
 ├── mkdocs.yml                      ✅
@@ -97,7 +100,7 @@ tzamot/
 
 | Task | Command |
 |---|---|
-| Start local DB | `docker compose -f infra/docker-compose.dev.yml up -d` |
+| Start local DB | `docker compose -f infra\docker-compose.dev.yml up -d --wait --wait-timeout 60` |
 | Install backend deps | `cd backend && uv sync` |
 | Run API | `cd backend && uv run uvicorn app.main:app --reload` |
 | Migrate | `cd backend && uv run alembic upgrade head` |
