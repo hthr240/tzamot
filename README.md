@@ -16,6 +16,13 @@ Full developer documentation lives in [`docs/`](docs/) and is published as an Mk
 
 ### Run the docs locally
 
+On Windows, double-click [`open-docs.cmd`](open-docs.cmd). It starts the
+documentation server in a dedicated Google Chrome window and shuts the server
+down when that window closes. From VS Code, you can also run **Tasks: Run
+Task** and select **Open documentation in Chrome**.
+
+Alternatively, start the server manually:
+
 ```bash
 pip install mkdocs-material
 mkdocs serve        # http://127.0.0.1:8000

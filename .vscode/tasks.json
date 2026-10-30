@@ -1,0 +1,15 @@
+{
+  "version": "2.0.0",
+  "tasks": [
+    {
+      "label": "Open documentation in Chrome",
+      "type": "shell",
+      "command": "${workspaceFolder}\\open-docs.cmd",
+      "problemMatcher": [],
+      "presentation": {
+        "reveal": "never",
+        "close": true
+      }
+    }
+  ]
+}
