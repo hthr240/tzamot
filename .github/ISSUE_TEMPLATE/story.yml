@@ -1,0 +1,32 @@
+name: User story
+description: Describe a goal and split its implementation into task sub-issues.
+labels: ["story"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        After creating the story, select its area label, milestone, and Tzamot project.
+        Add implementation tasks as sub-issues. Use fake data, never secrets or client details.
+  - type: textarea
+    id: story
+    attributes:
+      label: Story
+      description: Who needs this, what do they need, and why?
+      placeholder: As a developer, I want ... so that ...
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Observable conditions that must hold before the story can close.
+      placeholder: |
+        - [ ] ...
+        - [ ] Required task sub-issues are complete
+    validations:
+      required: true
+  - type: input
+    id: docs
+    attributes:
+      label: Related documentation
+      description: Link to the relevant documentation or decision.

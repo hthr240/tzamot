@@ -58,3 +58,21 @@ Put `Resolves #<number>` (or `Closes #`, `Fixes #`) in the PR description. When 
 - **Sprint planning** — team lead fills **To Do** from the current [sprint page](../roadmap/index.md).
 - **Daily** — a 2-line async update is enough for two people: *what I did, what's blocking me*.
 - **Sprint review** — demo on a phone, move leftovers to the next sprint, update the roadmap checklists.
+
+## Issue and PR templates
+
+**Issues → New issue** offers three forms once the templates are merged to `main`:
+
+- **User story** applies the `story` label and asks for the goal and acceptance criteria.
+- **Task** applies the `task` label and asks for scope, acceptance criteria, and dependencies.
+- **Bug report** applies the `bug` label and asks for reproduction steps, expected and actual behavior, environment, and fix criteria.
+
+All forms include a documentation field. Set the area label, milestone, project,
+and parent relationship separately; these are not inferred from the form.
+Leave future tasks unassigned until someone starts them.
+
+The [issue forms](https://github.com/hthr240/tzamot/tree/main/.github/ISSUE_TEMPLATE)
+and [PR template](https://github.com/hthr240/tzamot/blob/main/.github/PULL_REQUEST_TEMPLATE.md)
+live in `.github/`. The PR template asks for the linked task, validation results,
+tests, migrations, logging, and documentation. Explain non-applicable checks
+instead of claiming that unavailable backend tools were run.
