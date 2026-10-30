@@ -6,6 +6,21 @@
     scaffolding belongs to [Sprint 1](../roadmap/sprint-1.md); production
     deployment files belong to [Sprint 4](../roadmap/sprint-4.md).
 
+## Current scaffold
+
+The directory skeleton from #6 exists:
+
+- `backend/app/` and its `core`, `models`, `schemas`, `routers`, and `services`
+  packages have empty `__init__.py` files.
+- `backend/tests/` and `backend/scripts/` have `.gitkeep` placeholders.
+- `frontend/css/`, `frontend/js/`, and `frontend/icons/` have `.gitkeep` placeholders.
+- `infra/README.md` describes the runtime directory's scope.
+
+The layout below is the **target**, not an inventory of implemented modules.
+FastAPI, database configuration, migrations, UI files, dependency manifests,
+Dockerfiles, Compose, and the app launcher are still later tickets. The empty
+packages do not provide a running application.
+
 ## Repository layout
 
 ```
@@ -18,7 +33,7 @@ tzamot/
 │   ├── ISSUE_TEMPLATE/            story.yml · task.yml · bug.yml
 │   └── PULL_REQUEST_TEMPLATE.md
 │
-├── backend/                        🚧 FastAPI application (one Docker image)
+├── backend/                        package skeleton exists; FastAPI app planned
 │   ├── app/
 │   │   ├── main.py                 FastAPI app factory, middleware, router registration
 │   │   ├── core/
@@ -41,7 +56,7 @@ tzamot/
 │   ├── uv.lock                     locked versions — commit it
 │   └── .env.example                every config key with local defaults
 │
-├── frontend/                       🚧 static PWA — Cloudflare Pages root directory
+├── frontend/                       asset directories exist; static PWA planned
 │   ├── index.html                  client booking flow
 │   ├── admin.html                  hidden admin UI
 │   ├── css/
@@ -55,11 +70,11 @@ tzamot/
 │   ├── manifest.json
 │   └── sw.js                       service worker
 │
-├── infra/                          🚧 everything that runs the stack
+├── infra/                          README exists; runtime configuration planned
 │   ├── docker-compose.dev.yml      local: postgres only
 │   ├── docker-compose.prod.yml     Sprint 4: VPS, caddy + api + db
 │   ├── Caddyfile                   Sprint 4
-│   └── README.md                   VPS provisioning runbook
+│   └── README.md                   current scope; production runbook comes later
 │
 ├── docs/                           ✅ this site
 ├── mkdocs.yml                      ✅

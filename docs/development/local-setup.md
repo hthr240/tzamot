@@ -1,9 +1,10 @@
 # Local Setup
 
 !!! warning "Target setup — implementation is still in Sprint 1"
-    The backend, frontend, Compose file, and launcher are not implemented yet.
+    Only the backend package and frontend asset directory scaffold exists.
+    The API, UI, Compose file, and app launcher are not implemented yet.
     The instructions below describe the acceptance target for the infra tickets,
-    not commands that already work on the documentation-only repository.
+    not app commands that already work on this scaffold.
     No VPS, domain, or production secrets are needed.
 
 A standardised environment on every developer laptop that **mimics production without installing heavy databases on the host OS**. PostgreSQL runs in Docker; Python runs natively for fast iteration and full IDE debugging.
