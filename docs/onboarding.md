@@ -4,7 +4,8 @@ Welcome to the team! This page gets you from zero to your first merged pull requ
 
 !!! info "Who does what"
     - **Team lead** owns infrastructure, CI/CD, repo settings and Sprint 1. Ask them for access.
-    - **Everyone** owns code quality: every PR is reviewed by the other developer.
+    - **Everyone** owns code quality. While solo, use PRs and the agreed approval;
+      once the second developer joins, require their peer review.
 
 ## Day 1 — Understand the product
 
@@ -24,7 +25,7 @@ Welcome to the team! This page gets you from zero to your first merged pull requ
 
 - [ ] GitHub: write access to `hthr240/tzamot`
 - [ ] GitHub Projects board (see [Task management](development/task-management.md))
-- [ ] Shared `.env` secrets for local development (ask the team lead; **never** commit them)
+- [ ] Once the backend exists, copy its `.env.example` for local defaults; **never** commit `.env` or use real production data locally
 
 ## Day 2 — Set up your machine
 
@@ -50,7 +51,7 @@ Follow [Local setup](development/local-setup.md) end to end:
 - [ ] Pick a small issue from the **To Do** column and assign yourself
 - [ ] Create a branch: `git checkout -b feature/<issue-number>-short-description`
 - [ ] Open a PR with `Resolves #<issue-number>` in the description
-- [ ] Get CI green, get one approval, merge :tada:
+- [ ] Run applicable checks, obtain the agreed approval, merge :tada: (one peer approval once a second developer joins)
 
 ## Still stuck?
 

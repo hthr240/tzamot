@@ -1,6 +1,9 @@
 # CI Pipeline
 
-An automated quality gate that runs on **every push and every pull request**. If it's red, the PR cannot merge. Lives in `.github/workflows/ci.yml`.
+The backend quality gate is **planned in #24**, not implemented yet.
+Currently only the Docs workflow exists. This page describes the target
+`.github/workflows/ci.yml`; backend enforcement is a separate follow-up in
+[#31](https://github.com/hthr240/tzamot/issues/31).
 
 ## What it does
 
@@ -106,7 +109,15 @@ flowchart LR
             run: docker build -t tzamot-api:ci .
     ```
 
-    The `backend` job name is what you select as the **required status check** in branch protection. `setup-uv` reads the Python version from `pyproject.toml` (`requires-python = ">=3.13"`), so there is no separate `setup-python` step.
+    This reference is path-filtered. **Do not make it required as-is**: unrelated
+    PRs can be left waiting for a workflow that never ran. #24 must cover backend
+    and infrastructure changes and provide a stable result on every PR before
+    #31 enables the required check. Running the backend job on every PR is the
+    simplest option; if expensive work is conditional, the required result must
+    still be reported.
+
+    `setup-uv` reads the Python requirement from `pyproject.toml`; dependency and
+    runtime setup must match the committed project configuration.
 
 ## Local parity
 
@@ -120,4 +131,8 @@ Consider a `pre-commit` config (Sprint 1 stretch goal) so Ruff and Black run on 
 
 ## Beyond CI: deployment
 
-What happens *after* a green merge — image build, approval gate, SSH deploy — is a separate workflow (`deploy.yml`) described in [Architecture → CI/CD](../architecture/cicd.md). Docs are published by `docs.yml`.
+What happens *after* a green merge — image build, approval gate, SSH deploy — is
+a planned Sprint 4 workflow (`deploy.yml`) described in
+[Architecture → CI/CD](../architecture/cicd.md). It is not needed for local
+development and must not require a paid server before MVP readiness.
+Docs are published independently by `docs.yml`.

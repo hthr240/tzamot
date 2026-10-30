@@ -1,19 +1,63 @@
 # Task Management
 
-We track work with **GitHub Projects** — a Kanban board living inside the repository. Code, tasks, and discussion all happen on the same platform with zero context switching.
+We track work with GitHub Issues, Milestones, and the
+[Tzamot project](https://github.com/users/hthr240/projects/3), linked to the repository.
+Code, tasks, and discussion stay on the same platform. The project is private;
+repository access and project access are separate.
+
+## Jira concepts in GitHub
+
+| Jira concept | Our GitHub equivalent |
+|---|---|
+| Sprint | A milestone with a goal. Sprint 1–4 exist; no fixed due dates yet. |
+| User story | An issue labelled `story`, with acceptance criteria and task sub-issues. |
+| Task / sub-task | An issue labelled `task`, linked to its parent story. |
+| Bug | An issue labelled `bug`, with reproduction steps and expected behavior. |
+| Epic | An optional higher-level parent issue; not a separate layer in Sprint 1. |
+| Component | An area label such as `backend` or `infra`. |
+| Board | A Project view grouped into Status columns. |
+| Estimate | The Project's `Estimate` field, in approximate developer-days, not story points. |
+
+This personal repository uses labels, not organization-only issue types.
+Stories describe outcomes; tasks describe the small changes needed to achieve them.
+Milestone completion is an issue-count percentage, **not a burndown chart**.
+It counts both parent stories and their tasks.
 
 ## The board
 
 ```mermaid
 flowchart LR
-    T["📋 To Do"] --> P["🔨 In Progress"] --> D["✅ Done"]
+    B[Backlog] --> T[To Do] --> P[In Progress] --> R[In Review] --> D[Done]
 ```
 
 | Column | Meaning | Who moves cards here |
 |---|---|---|
-| **To Do** | Ready to pick up. Clearly scoped, acceptance criteria written. | Team lead (during sprint planning) |
-| **In Progress** | Someone is actively working on it. **One or two per person max.** | The developer, when they start |
-| **Done** | Merged to `main`. | GitHub — automatically, when a PR with `Resolves #N` merges |
+| **Backlog** | Newly added or not selected for work. May already have a milestone. | Item-added automation |
+| **To Do** | Scoped but not started. Check prerequisites before picking it up. | Team lead / developer |
+| **In Progress** | Assigned and actively being worked on. **One active task per developer.** | Developer |
+| **In Review** | PR or configuration work is ready for approval. | Developer, manually |
+| **Done** | Code merged to `main`, or non-code work verified and closed. | Issue-closed automation |
+
+Parent stories may be In Progress while their tasks move independently.
+Do not close a story just because one task merged.
+
+### Views and automation
+
+| View | Purpose |
+|---|---|
+| **Board** | Issues across milestones, in Status columns |
+| **Sprint 1** | Sprint 1 issues, in Status columns and grouped by parent story |
+| **Backlog** | Open issues with no milestone; currently it may be empty |
+
+**Milestone membership and Status are independent.** For example, an issue can
+belong to Sprint 1 while its Status is Backlog. The Backlog *view* instead filters
+for issues with no milestone. Views show issues, avoiding duplicate PR cards.
+
+Auto-add, item-added, issue-closed, and issue-reopened behavior has been tested:
+new issues enter Backlog, closing moves them to Done, and reopening moves them
+to To Do. Sub-issue auto-add and PR-merged workflows are also enabled.
+PR-linked In Review automation is disabled, so move the issue there manually.
+Auto-close is enabled too; only use Done for genuinely completed work.
 
 ## Issue conventions
 
@@ -44,20 +88,37 @@ Link to the relevant page, e.g. docs/architecture/booking-algorithm.md
 
 | Label | Use |
 |---|---|
-| `backend` · `frontend` · `infra` · `docs` | Area |
-| `sprint-1` … `sprint-4` | Roadmap sprint — see [Roadmap](../roadmap/index.md) |
-| `bug` | Something broken on `main` |
+| `story` · `task` · `bug` | Kind of work |
+| `backend` · `frontend` · `infra` · `ci` · `docs` · `pm` | Area; `pm` means project management |
 | `good first issue` | Suitable for a newly onboarded developer |
+
+Use milestones instead of `sprint-N` labels. Set a task's milestone explicitly;
+do not assume it inherits the parent's milestone. Use native **blocked by**
+relationships for prerequisites, and leave future tasks unassigned.
 
 ## Linking PRs to issues
 
-Put `Resolves #<number>` (or `Closes #`, `Fixes #`) in the PR description. When the PR merges, GitHub closes the issue and moves the card to **Done**.
+Put `Resolves #<task-number>` (or `Closes #`, `Fixes #`) in the PR description.
+When the PR merges into the default branch (`main`), GitHub closes the linked
+task and the issue-closed workflow moves it to Done. Do not link the whole story
+unless the PR actually completes it.
+
+Configuration-only tasks can be closed manually after their acceptance criteria
+are verified; they do not need an empty branch or PR. See the
+[Git workflow](workflow.md) for the code-change path.
 
 ## Sprint rhythm
 
-- **Sprint planning** — team lead fills **To Do** from the current [sprint page](../roadmap/index.md).
-- **Daily** — a 2-line async update is enough for two people: *what I did, what's blocking me*.
-- **Sprint review** — demo on a phone, move leftovers to the next sprint, update the roadmap checklists.
+- **Planning** — give stories and tasks a milestone, write acceptance criteria,
+  add prerequisite links, and select work into To Do.
+- **Daily** — pick one unblocked task, assign yourself, implement and validate,
+  open a PR, move to In Review, obtain the agreed approval, then merge.
+- **Review** — demonstrate the milestone goal, close completed stories, and
+  explicitly move unfinished work to the next milestone or unscheduled backlog.
+
+Sprint 1 has no fixed deadline. Close its milestone only when its goal and
+required work are complete. Backend, frontend, and local infrastructure come
+first; no VPS or domain purchase is needed before MVP readiness.
 
 ## Issue and PR templates
 

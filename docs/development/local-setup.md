@@ -1,5 +1,11 @@
 # Local Setup
 
+!!! warning "Target setup — implementation is still in Sprint 1"
+    The backend, frontend, Compose file, and launcher are not implemented yet.
+    The instructions below describe the acceptance target for the infra tickets,
+    not commands that already work on the documentation-only repository.
+    No VPS, domain, or production secrets are needed.
+
 A standardised environment on every developer laptop that **mimics production without installing heavy databases on the host OS**. PostgreSQL runs in Docker; Python runs natively for fast iteration and full IDE debugging.
 
 !!! success "Why this split?"
@@ -122,6 +128,10 @@ uv run uvicorn app.main:app --reload --port 8000
 ```
 
 Open <http://localhost:8000/docs> — FastAPI's interactive Swagger UI. Every endpoint can be tried from there.
+
+The developer documentation launcher also uses port 8000. Close its Chrome
+window to stop that server before starting the API, or run the documentation
+manually on another port with `mkdocs serve --dev-addr 127.0.0.1:8001`.
 
 ### 8. Run the frontend
 

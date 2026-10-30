@@ -108,7 +108,7 @@ nav:
       - Project Structure: development/project-structure.md
   - Roadmap:
       - roadmap/index.md
-      - Sprint 1 — Foundation & DevOps: roadmap/sprint-1.md
+      - Sprint 1 — Foundation & Local Dev: roadmap/sprint-1.md
       - Sprint 2 — Admin Core: roadmap/sprint-2.md
       - Sprint 3 — Booking Engine: roadmap/sprint-3.md
       - Sprint 4 — PWA & Launch: roadmap/sprint-4.md
