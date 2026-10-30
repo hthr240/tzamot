@@ -1,0 +1,58 @@
+name: Bug report
+description: Report a reproducible defect and define the expected fix.
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Select an area label, milestone when scheduled, and Tzamot project.
+        Use fake names and phone numbers. Remove tokens, passwords, and personal data from logs.
+  - type: textarea
+    id: what
+    attributes:
+      label: What is broken?
+      description: Summarize the defect and its impact.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Steps to reproduce
+      placeholder: |
+        1. ...
+        2. ...
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected behavior
+    validations:
+      required: true
+  - type: textarea
+    id: actual
+    attributes:
+      label: Actual behavior
+    validations:
+      required: true
+  - type: textarea
+    id: environment
+    attributes:
+      label: Environment
+      description: Local or CI, operating system, browser, and branch or commit.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      placeholder: |
+        - [ ] Reproduction steps produce the expected behavior
+        - [ ] A regression test covers the defect where applicable
+    validations:
+      required: true
+  - type: input
+    id: docs
+    attributes:
+      label: Related documentation
+      description: Link to the relevant documentation, issue, or decision.

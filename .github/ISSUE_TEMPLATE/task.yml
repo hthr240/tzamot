@@ -1,0 +1,37 @@
+name: Task
+description: Define a small, testable piece of implementation or configuration work.
+labels: ["task"]
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Select an area label, milestone, and Tzamot project, and link the parent story.
+        Leave the task unassigned until someone starts it. Never include secrets or client data.
+  - type: textarea
+    id: what
+    attributes:
+      label: What
+      description: Describe the change and its boundaries.
+    validations:
+      required: true
+  - type: textarea
+    id: acceptance
+    attributes:
+      label: Acceptance criteria
+      description: Include how the implementation or configuration will be verified.
+      placeholder: |
+        - [ ] ...
+        - [ ] Applicable checks pass
+    validations:
+      required: true
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: Dependencies
+      description: List prerequisite issue numbers and set native blocked-by links when needed.
+      placeholder: "Blocked by #..."
+  - type: input
+    id: docs
+    attributes:
+      label: Related documentation
+      description: Link to the relevant documentation or decision.
