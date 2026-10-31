@@ -13,6 +13,9 @@ The directory skeleton from #6 exists:
 - `backend/app/` and its `core`, `models`, `schemas`, `routers`, and `services`
   packages have empty `__init__.py` files.
 - `backend/tests/` and `backend/scripts/` have `.gitkeep` placeholders.
+- `backend/pyproject.toml` declares Python 3.13, runtime and development
+  dependencies, plus Ruff, Black, and pytest configuration. `backend/uv.lock`
+  locks the complete environment.
 - `frontend/css/`, `frontend/js/`, and `frontend/icons/` have `.gitkeep` placeholders.
 - `infra/docker-compose.dev.yml` runs local PostgreSQL 16 with a health check,
   localhost-only port, and persistent named volume.
@@ -21,10 +24,10 @@ The directory skeleton from #6 exists:
 - `infra/README.md` documents startup, connection, stop, and destructive reset.
 
 The layout below is the **target**, not an inventory of implemented modules.
-FastAPI, application database sessions, migrations, UI files, dependency
-manifests, Dockerfiles, production Compose, and the app launcher are still
-later tickets. The database is usable independently; the empty packages do not
-provide a running application.
+The FastAPI dependency is installed, but the application, database sessions,
+migrations, UI files, Dockerfiles, production Compose, and app launcher are
+still later tickets. The database and Python environment are usable
+independently; the empty packages do not provide a running application.
 
 ## Repository layout
 
@@ -38,7 +41,7 @@ tzamot/
 │   ├── ISSUE_TEMPLATE/            story.yml · task.yml · bug.yml
 │   └── PULL_REQUEST_TEMPLATE.md
 │
-├── backend/                        package skeleton exists; FastAPI app planned
+├── backend/                        dependencies ready; FastAPI app planned
 │   ├── app/
 │   │   ├── main.py                 FastAPI app factory, middleware, router registration
 │   │   ├── core/
