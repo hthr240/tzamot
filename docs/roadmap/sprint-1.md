@@ -35,7 +35,7 @@ data (#16), CI (#22), and the frontend shell (#27).
 
 ### Structured logging
 
-- [ ] Choose `loguru` vs stdlib `logging`
+- [x] Choose stdlib `logging` — #13; [ADR-010](../decisions.md#adr-010-standard-library-logging)
 - [ ] Request middleware: request id, method, path, status, duration
 - [ ] INFO/DEBUG process logs for API requests, DB queries, background work
 - [ ] ERROR/CRITICAL logs with full stack traces for unhandled exceptions and API failures
@@ -84,6 +84,6 @@ A new developer can:
 | Question | Options | Decision |
 |---|---|---|
 | Weekly working-hours template model | Materialise into `availability` vs compute at query time | pending — see [Data model](../architecture/data-model.md#availability) |
-| Logging library | `loguru` vs stdlib `logging` | pending |
+| ~~Logging library~~ | `loguru` vs stdlib `logging` | **stdlib `logging`** — [ADR-010](../decisions.md#adr-010-standard-library-logging) |
 | ~~Dependency management~~ | | **uv + pyproject.toml** — [ADR-004](../decisions.md#adr-004-uv-pyprojecttoml-for-dependencies) |
 | ~~Python version~~ | | **3.13** — [ADR-002](../decisions.md#adr-002-python-313) |

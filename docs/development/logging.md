@@ -14,7 +14,15 @@ A robust, structured logging system is a **Sprint 1 deliverable**. In production
 
 ## Library
 
-`loguru` (recommended for its simplicity) or the standard library `logging` — decide in Sprint 1. Either way the output format and levels below are the contract.
+Use Python's standard-library **`logging`** package, as decided in
+[ADR-010](../decisions.md#adr-010-standard-library-logging). It works directly
+with Uvicorn, SQLAlchemy, and Alembic and adds no runtime dependency.
+
+Configuration belongs in one application module using
+`logging.config.dictConfig`. Other modules obtain a named logger with
+`logging.getLogger(__name__)`; they do not add handlers or configure formatting.
+Tickets #14 and #15 implement the shared configuration, request context, and
+exception handling. The format and levels below remain the contract.
 
 ## Levels
 
