@@ -16,6 +16,8 @@ The directory skeleton from #6 exists:
 - `backend/pyproject.toml` declares Python 3.13, runtime and development
   dependencies, plus Ruff, Black, and pytest configuration. `backend/uv.lock`
   locks the complete environment.
+- `backend/app/core/config.py` loads typed settings from environment variables
+  or `.env`; `backend/.env.example` documents every local value.
 - `frontend/css/`, `frontend/js/`, and `frontend/icons/` have `.gitkeep` placeholders.
 - `infra/docker-compose.dev.yml` runs local PostgreSQL 16 with a health check,
   localhost-only port, and persistent named volume.
@@ -24,10 +26,11 @@ The directory skeleton from #6 exists:
 - `infra/README.md` documents startup, connection, stop, and destructive reset.
 
 The layout below is the **target**, not an inventory of implemented modules.
-The FastAPI dependency is installed, but the application, database sessions,
-migrations, UI files, Dockerfiles, production Compose, and app launcher are
-still later tickets. The database and Python environment are usable
-independently; the empty packages do not provide a running application.
+The FastAPI dependency and settings are ready, but the application, database
+sessions, migrations, UI files, Dockerfiles, production Compose, and app
+launcher are still later tickets. The database and Python environment are
+usable independently; the package skeleton does not provide a running
+application.
 
 ## Repository layout
 
@@ -45,7 +48,7 @@ tzamot/
 │   ├── app/
 │   │   ├── main.py                 FastAPI app factory, middleware, router registration
 │   │   ├── core/
-│   │   │   ├── config.py           Settings from environment variables
+│   │   │   ├── config.py           ✅ typed settings from environment variables
 │   │   │   ├── logging.py          Structured logging setup
 │   │   │   └── db.py               Engine, session dependency
 │   │   ├── models/                 SQLAlchemy: service.py · availability.py · appointment.py
@@ -62,7 +65,7 @@ tzamot/
 │   ├── Dockerfile                  python:3.13-slim + uv sync --frozen
 │   ├── pyproject.toml              deps + [tool.ruff] [tool.black] [tool.pytest]
 │   ├── uv.lock                     locked versions — commit it
-│   └── .env.example                every config key with local defaults
+│   └── .env.example                ✅ every config key with local defaults
 │
 ├── frontend/                       asset directories exist; static PWA planned
 │   ├── index.html                  client booking flow
