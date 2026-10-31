@@ -1,3 +1,5 @@
+"""Typed application settings loaded from the environment or a dotenv file."""
+
 from typing import Annotated, Literal
 
 from pydantic import Field, field_validator
@@ -8,6 +10,8 @@ LogLevel = Literal["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"]
 
 
 class Settings(BaseSettings):
+    """Validate runtime configuration, falling back to safe local defaults."""
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",
@@ -17,6 +21,7 @@ class Settings(BaseSettings):
     env: Environment = "local"
     database_url: str = "postgresql+psycopg://tzamot:tzamot@localhost:5432/tzamot"
     log_level: LogLevel = "DEBUG"
+    # NoDecode keeps CSV input intact for the validator instead of parsing JSON.
     cors_origins: Annotated[list[str], NoDecode] = Field(
         default_factory=lambda: [
             "http://127.0.0.1:5500",
@@ -29,6 +34,7 @@ class Settings(BaseSettings):
     @field_validator("cors_origins", mode="before")
     @classmethod
     def parse_cors_origins(cls, value: object) -> object:
+        """Convert comma-separated origins into a clean list."""
         if isinstance(value, str):
             return [origin.strip() for origin in value.split(",") if origin.strip()]
         return value
