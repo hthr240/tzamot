@@ -50,6 +50,19 @@ All configuration is read from **environment variables** (12-factor). The same i
 
 `backend/.env.example` is the checked-in template listing every key with local defaults. Copy it to `.env`; never commit `.env`.
 
+### Backend settings
+
+`app.core.config.Settings` validates these values when instantiated. Process
+environment variables take precedence over `backend/.env`; missing values use
+the documented local defaults. `CORS_ORIGINS` is a comma-separated value and is
+exposed to application code as a trimmed `list[str]`.
+
+```python
+from app.core.config import Settings
+
+settings = Settings()
+```
+
 ## Frontend config
 
 The static frontend cannot read environment variables. `frontend/js/config.js` picks the API base URL by hostname:
