@@ -129,6 +129,42 @@ the initial policy. See [Git workflow](development/workflow.md#branch-protection
 
 ---
 
+## ADR-010 · Standard-library logging
+
+**Date:** 2026-10-31 · **Status:** ✅ Decided
+
+**Context.** The API needs request ids, structured fields, environment-specific
+levels, and full exception tracebacks on stdout/stderr. Uvicorn, SQLAlchemy, and
+Alembic already emit records through Python's standard logging system. The team
+must choose one application logging API before request and exception middleware
+are implemented.
+
+**Options.**
+
+1. Python's standard-library `logging`: built in, widely documented, and
+   directly compatible with framework and dependency logs, but requires more
+   explicit configuration.
+2. `loguru`: a concise API with convenient binding and exception helpers, but
+   adds a dependency and requires interception or adapters to combine standard
+   library records into one pipeline.
+
+**Decision.** Use the standard-library `logging` package. Configure it once
+with `logging.config.dictConfig`; application modules use
+`logging.getLogger(__name__)`. Tickets #14 and #15 will add request context,
+formatting, middleware, and exception handling.
+
+**Consequences.** Application, Uvicorn, SQLAlchemy, and Alembic logs can share
+one configuration without a bridge or additional runtime package. Junior
+developers can use Python's standard documentation and familiar APIs. The
+project must maintain a small amount of explicit formatter, filter, and handler
+configuration, and logging calls are less concise than Loguru's.
+
+**Revisit when:** the implementation in #14 and #15 demonstrates a concrete
+requirement that standard logging cannot meet cleanly. Supersede this ADR
+rather than editing it.
+
+---
+
 ## Pending decisions
 
 | Topic | Options | Owner | Target |
@@ -138,4 +174,3 @@ the initial policy. See [Git workflow](development/workflow.md#branch-protection
 | Admin authentication | Static `ADMIN_TOKEN` header vs something stronger | Both | Sprint 2 |
 | Slot granularity | 15 / 30 min | Both + owner | Sprint 3 |
 | Client cancellation lookup | Token link vs phone lookup | Both | Sprint 4 |
-| Logging library | `loguru` vs stdlib | Team lead | Sprint 1 |

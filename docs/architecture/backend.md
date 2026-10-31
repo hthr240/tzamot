@@ -14,7 +14,7 @@ The backend is a Python **FastAPI** application that owns all business logic. Th
 | Migrations | **Alembic** | Every schema change is a migration. `alembic upgrade head` runs in CI and on deploy. |
 | Validation | **Pydantic** | Request/response schemas (comes with FastAPI) |
 | Database | **PostgreSQL** | Via Docker everywhere |
-| Logging | `loguru` or stdlib `logging` | Structured, to stdout/stderr — see [Logging](../development/logging.md) |
+| Logging | stdlib `logging` | One structured stdout/stderr pipeline — [ADR-010](../decisions.md#adr-010-standard-library-logging) |
 | Lint / format | **Ruff** · **Black** | Enforced in CI — see [Coding standards](../development/coding-standards.md) |
 | Tests | **pytest** | Integration tests against a seeded PostgreSQL |
 
