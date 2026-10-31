@@ -47,7 +47,7 @@ tzamot/
 │   │   ├── main.py                 ✅ FastAPI app factory and router registration
 │   │   ├── core/
 │   │   │   ├── config.py           ✅ typed settings from environment variables
-│   │   │   ├── logging.py          Structured logging setup
+│   │   │   ├── logging.py          ✅ console logging and request ID middleware
 │   │   │   └── db.py               Engine, session dependency
 │   │   ├── models/                 SQLAlchemy: service.py · availability.py · appointment.py
 │   │   ├── schemas/                Pydantic request/response models

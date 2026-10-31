@@ -21,15 +21,43 @@ with Uvicorn, SQLAlchemy, and Alembic and adds no runtime dependency.
 Configuration belongs in one application module using
 `logging.config.dictConfig`. Other modules obtain a named logger with
 `logging.getLogger(__name__)`; they do not add handlers or configure formatting.
-Tickets #14 and #15 implement the shared configuration, request context, and
-exception handling. The format and levels below remain the contract.
+Ticket #14 implements the shared configuration and request context. Full
+traceback logging and consistent JSON errors remain in #15.
+
+## Request logging
+
+Logging is configured when the API starts, using `LOG_LEVEL` from settings.
+Each HTTP request gets a new UUID. Route responses include it in the
+`X-Request-ID` header. Caller-provided IDs are not reused. The same ID is available as
+`request.state.request_id` inside a route.
+
+`request.started` is logged at DEBUG. `request.completed` is logged at INFO
+with method, path, response status, and elapsed milliseconds. Timing covers
+response processing, including streaming and background work; it is not just
+the time taken to receive response headers. Exceptions still propagate and
+produce a `request.failed` event; their traceback and error body are added in
+#15.
+
+Use a named logger in application code:
+
+```python
+import logging
+
+logger = logging.getLogger(__name__)
+logger.info("service.created id=%s", service_id)
+```
+
+The console handler attaches the current request ID automatically. It uses a
+`ContextVar` (a value kept separate for each running request), so simultaneous
+requests do not mix their IDs. Logs outside an HTTP request use `req=-`.
+Uvicorn records use the same handler and are not duplicated.
 
 ## Levels
 
 ```mermaid
 flowchart TB
-    D["DEBUG<br/>SQL queries · slot-calculation internals · request/response bodies<br/><i>local only</i>"]
-    I["INFO<br/>request start/end · appointment created / cancelled · service created / updated / disabled · availability changed"]
+    D["DEBUG<br/>request start · SQL queries · slot-calculation internals · request/response bodies<br/><i>local only</i>"]
+    I["INFO<br/>request end · appointment created / cancelled · service created / updated / disabled · availability changed"]
     W["WARNING<br/>validation failures · 'attempted to book an already taken slot' · cancellation refused (24h rule) · slow queries"]
     E["ERROR<br/>unhandled exceptions with stack trace · DB connection failures · 5xx responses"]
     C["CRITICAL<br/>process cannot continue · migrations failed on startup"]
@@ -44,9 +72,10 @@ flowchart TB
 
 ## Format
 
-Structured key=value (or JSON) so lines are both human-readable and greppable:
+Structured key=value so lines are both human-readable and greppable:
 
 ```
+2026-11-02 10:31:07.412 | INFO     | req=7f3a9c | request.completed method=GET path=/health status=200 duration_ms=3.000
 2026-11-02 10:31:07.412 | INFO     | req=7f3a9c | appointment.created id=184 service_id=3 starts_at=2026-11-05T10:30+02:00 client_phone=05******12
 2026-11-02 10:31:09.001 | WARNING  | req=81bb02 | booking.conflict service_id=3 starts_at=2026-11-05T10:30+02:00 reason="slot already taken"
 2026-11-02 10:31:12.550 | ERROR    | req=9d10e4 | unhandled exception
@@ -62,7 +91,7 @@ Conventions:
 
 ## What must be logged (from the roadmap)
 
-- [ ] Request start/end with method, path, status, duration (middleware)
+- [x] Request start/end with method, path, status, duration — #14
 - [ ] Service **created** and **deleted / disabled** — Sprint 2
 - [ ] Booking process **start** and **end** — Sprint 3
 - [ ] Booking **validation failures** — e.g. *"User attempted to book an already taken slot"* — Sprint 3

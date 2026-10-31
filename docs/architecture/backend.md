@@ -58,6 +58,12 @@ uv run uvicorn app.main:app --reload
 Swagger at `/docs`, ReDoc at `/redoc`, and the OpenAPI document are available
 in local and CI environments. All three are disabled in production.
 
+Startup configures the shared console logger using `LOG_LEVEL`. HTTP middleware
+returns a generated `X-Request-ID` and logs status and elapsed time for every
+request. Application logs share that ID automatically; see
+[Request logging](../development/logging.md#request-logging). Full exception
+tracebacks and JSON error handling are implemented separately in #15.
+
 ## API surface (MVP)
 
 The exact paths are finalised during Sprints 2–3. The resources are fixed:
