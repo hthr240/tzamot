@@ -6,6 +6,7 @@ from contextlib import asynccontextmanager
 from fastapi import FastAPI
 
 from app.core.config import Settings
+from app.core.errors import handle_unhandled_exception
 from app.core.logging import RequestLoggingMiddleware, configure_logging
 from app.routers.health import router as health_router
 
@@ -31,6 +32,8 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     )
     # App state makes the same settings available to routers and middleware.
     app.state.settings = app_settings
+    # FastAPI still uses its built-in handlers for HTTP errors and validation.
+    app.add_exception_handler(Exception, handle_unhandled_exception)
     app.add_middleware(RequestLoggingMiddleware)
     app.include_router(health_router)
     return app
