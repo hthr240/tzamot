@@ -1,10 +1,11 @@
 # Local Setup
 
-!!! warning "Database ready; the rest of the app is still planned"
-    The directory scaffold and local PostgreSQL Compose setup exist.
-    Step 2 works now. The API, UI, dependency setup, migrations, seed data, and
-    app launcher remain later Sprint 1 tickets. Their instructions below are
-    acceptance targets, not already working app commands.
+!!! warning "Database and dependencies ready; the app is still planned"
+    The directory scaffold, local PostgreSQL Compose setup, and locked Python
+    dependencies exist. Steps 2 and 3 work now. The API, UI, configuration,
+    migrations, seed data, and app launcher remain later Sprint 1 tickets.
+    Their instructions below are acceptance targets, not already working app
+    commands.
     No VPS, domain, or production secrets are needed.
 
 A standardised environment on every developer laptop that **mimics production without installing heavy databases on the host OS**. PostgreSQL runs in Docker; Python runs natively for fast iteration and full IDE debugging.
