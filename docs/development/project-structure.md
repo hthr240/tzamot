@@ -26,9 +26,9 @@ The directory skeleton from #6 exists:
 - `infra/README.md` documents startup, connection, stop, and destructive reset.
 
 The layout below is the **target**, not an inventory of implemented modules.
-The FastAPI application factory, health endpoint, and settings are ready.
-Database sessions, migrations, feature routes, UI files, Dockerfiles,
-production Compose, and the app launcher are still later tickets.
+The FastAPI application factory, health endpoint, settings, and production
+backend image are ready. Database sessions, migrations, feature routes, UI
+files, production Compose, and the app launcher are still later tickets.
 
 ## Repository layout
 
@@ -60,7 +60,8 @@ tzamot/
 │   ├── tests/
 │   │   ├── conftest.py             DB session fixture, frozen clock
 │   │   └── test_*.py
-│   ├── Dockerfile                  python:3.13-slim + uv sync --frozen
+│   ├── Dockerfile                  ✅ Python 3.13 non-root production image
+│   ├── .dockerignore               ✅ excludes local, test, and secret files
 │   ├── pyproject.toml              deps + [tool.ruff] [tool.black] [tool.pytest]
 │   ├── uv.lock                     locked versions — commit it
 │   └── .env.example                ✅ every config key with local defaults
