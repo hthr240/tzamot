@@ -21,8 +21,8 @@ with Uvicorn, SQLAlchemy, and Alembic and adds no runtime dependency.
 Configuration belongs in one application module using
 `logging.config.dictConfig`. Other modules obtain a named logger with
 `logging.getLogger(__name__)`; they do not add handlers or configure formatting.
-Ticket #14 implements the shared configuration and request context. Full
-traceback logging and consistent JSON errors remain in #15.
+Ticket #14 implements shared configuration and request context. Ticket #15
+adds full traceback logging and consistent JSON errors for unexpected failures.
 
 ## Request logging
 
@@ -34,9 +34,9 @@ Each HTTP request gets a new UUID. Route responses include it in the
 `request.started` is logged at DEBUG. `request.completed` is logged at INFO
 with method, path, response status, and elapsed milliseconds. Timing covers
 response processing, including streaming and background work; it is not just
-the time taken to receive response headers. Exceptions still propagate and
-produce a `request.failed` event; their traceback and error body are added in
-#15.
+the time taken to receive response headers. Unexpected exceptions produce a
+`request.failed` event and an ERROR-level `request.unhandled_exception` record
+with the full traceback.
 
 Use a named logger in application code:
 
@@ -70,6 +70,30 @@ flowchart TB
 | CI | `INFO` |
 | Staging / Production | `INFO` |
 
+### Unexpected errors
+
+The global handler in `app/core/errors.py` catches unexpected HTTP failures.
+Before a response has started, it returns HTTP 500 with a generic message:
+
+```json
+{"detail": "Internal server error", "request_id": "<id>"}
+```
+
+The ID matches both `X-Request-ID` and the ERROR log's `req=<id>`. Exception
+messages and tracebacks stay in server logs, not the client response, in both
+local and production environments. Use this ID to find the cause of a reported
+failure.
+
+Expected errors still use FastAPI's built-in handling: `HTTPException` keeps
+its status, detail, and headers; request validation errors remain HTTP 422.
+Developers should not catch unexpected bugs just to return a successful result.
+
+If a streaming response or background task fails after headers were sent,
+the handler logs the traceback but cannot replace that response with a 500.
+Starlette re-raises server exceptions after handling; Uvicorn may also emit
+its own traceback. In tests, use `TestClient(..., raise_server_exceptions=False)`
+to inspect the HTTP response instead of having the original exception raised.
+
 ## Format
 
 Structured key=value so lines are both human-readable and greppable:
@@ -78,7 +102,7 @@ Structured key=value so lines are both human-readable and greppable:
 2026-11-02 10:31:07.412 | INFO     | req=7f3a9c | request.completed method=GET path=/health status=200 duration_ms=3.000
 2026-11-02 10:31:07.412 | INFO     | req=7f3a9c | appointment.created id=184 service_id=3 starts_at=2026-11-05T10:30+02:00 client_phone=05******12
 2026-11-02 10:31:09.001 | WARNING  | req=81bb02 | booking.conflict service_id=3 starts_at=2026-11-05T10:30+02:00 reason="slot already taken"
-2026-11-02 10:31:12.550 | ERROR    | req=9d10e4 | unhandled exception
+2026-11-02 10:31:12.550 | ERROR    | req=9d10e4 | request.unhandled_exception method=GET path=/example
 Traceback (most recent call last):
   ...
 ```
@@ -97,7 +121,7 @@ Conventions:
 - [ ] Booking **validation failures** — e.g. *"User attempted to book an already taken slot"* — Sprint 3
 - [ ] Cancellation **refused** by the 24 h rule — Sprint 4
 - [ ] Admin **cancelled** a client's appointment — Sprint 2–3
-- [ ] **Unhandled exceptions** with full traceback (global exception handler)
+- [x] **Unhandled HTTP exceptions** with full traceback and correlated JSON errors — #15
 
 ## Viewing logs
 

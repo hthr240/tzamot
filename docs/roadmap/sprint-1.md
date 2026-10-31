@@ -38,7 +38,8 @@ data (#16), CI (#22), and the frontend shell (#27).
 - [x] Choose stdlib `logging` — #13; [ADR-010](../decisions.md#adr-010-standard-library-logging)
 - [x] Request middleware: request id, method, path, status, duration — #14
 - [ ] INFO/DEBUG process logs for API requests, DB queries, background work
-- [ ] ERROR/CRITICAL logs with full stack traces for unhandled exceptions and API failures
+- [x] ERROR logs with full tracebacks and correlated JSON responses for unhandled API exceptions — #15
+- [ ] ERROR/CRITICAL logs for database and process failures as those components are implemented
 - [x] Structured console output to stdout, readable in Docker — #14; see [Logging](../development/logging.md)
 
 ### Database & migrations

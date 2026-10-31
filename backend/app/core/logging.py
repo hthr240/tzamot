@@ -92,7 +92,7 @@ class RequestLoggingMiddleware:
             await self.app(scope, receive, send_with_request_id)
             completed = True
         finally:
-            # Exceptions still propagate; #15 adds their traceback and JSON response.
+            # The global handler processes failures after request context is reset.
             try:
                 logger.info(
                     "%s method=%s path=%s status=%s duration_ms=%.3f",

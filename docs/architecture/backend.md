@@ -62,7 +62,11 @@ Startup configures the shared console logger using `LOG_LEVEL`. HTTP middleware
 returns a generated `X-Request-ID` and logs status and elapsed time for every
 request. Application logs share that ID automatically; see
 [Request logging](../development/logging.md#request-logging). Full exception
-tracebacks and JSON error handling are implemented separately in #15.
+tracebacks and JSON error handling use the global handler in `app/core/errors.py`.
+Unexpected HTTP failures return 500 with `detail` and `request_id`; normal HTTP
+and validation errors keep their existing 4xx responses. See
+[Unexpected errors](../development/logging.md#unexpected-errors) for response
+format and already-started response limits.
 
 ## API surface (MVP)
 
