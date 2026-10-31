@@ -29,7 +29,7 @@ data (#16), CI (#22), and the frontend shell (#27).
 - [x] Write `infra/docker-compose.dev.yml` running local PostgreSQL 16, with health checks and persistent data — #7; see [Local setup](../development/local-setup.md)
 - [x] Initialise the FastAPI project with `uv init` → `pyproject.toml` + `uv.lock` (Python 3.13) — #8
 - [x] `backend/.env.example` with all config keys and typed settings loading — #9; see [Environments → Configuration](../architecture/environments.md#configuration-per-environment)
-- [ ] `/health` endpoint
+- [x] FastAPI app factory, environment-aware docs, and `/health` endpoint — #10
 - [ ] Frontend shell served locally on port 5500, calling the local API without CORS errors
 - [ ] One-command launcher for the DB, migrations, API, and frontend; documented stop procedure — #11
 
