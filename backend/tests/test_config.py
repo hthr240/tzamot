@@ -1,9 +1,12 @@
+"""Tests for the two supported settings sources: the environment and `.env`."""
+
 from pathlib import Path
 
 import pytest
 
 from app.core.config import Settings
 
+# Clear every supported variable so a developer's machine cannot affect tests.
 SETTING_NAMES = (
     "ENV",
     "DATABASE_URL",
@@ -18,6 +21,7 @@ SETTING_NAMES = (
 def clear_settings_environment(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    """Start each test without configuration inherited from the computer."""
     for name in SETTING_NAMES:
         monkeypatch.delenv(name, raising=False)
 
@@ -25,6 +29,7 @@ def clear_settings_environment(
 def test_settings_load_from_environment(
     monkeypatch: pytest.MonkeyPatch,
 ) -> None:
+    # Set every value explicitly to prove environment loading and validation.
     monkeypatch.setenv("ENV", "production")
     monkeypatch.setenv(
         "DATABASE_URL",
@@ -38,7 +43,7 @@ def test_settings_load_from_environment(
     monkeypatch.setenv("TZ", "Asia/Jerusalem")
     monkeypatch.setenv("ADMIN_TOKEN", "production-token")
 
-    settings = Settings(_env_file=None)
+    settings = Settings(_env_file=None)  # Do not read a developer's local `.env`.
 
     assert settings.env == "production"
     assert settings.database_url == (
@@ -54,6 +59,7 @@ def test_settings_load_from_environment(
 
 
 def test_settings_load_from_dotenv(tmp_path: Path) -> None:
+    # Use a temporary file so the test never creates or changes backend/.env.
     env_file = tmp_path / ".env"
     env_file.write_text(
         "\n".join(
