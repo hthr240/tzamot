@@ -6,7 +6,7 @@
     scaffolding belongs to [Sprint 1](../roadmap/sprint-1.md); production
     deployment files belong to [Sprint 4](../roadmap/sprint-4.md).
 
-## Current scaffold
+## Current foundation
 
 The directory skeleton from #6 exists:
 
@@ -14,12 +14,17 @@ The directory skeleton from #6 exists:
   packages have empty `__init__.py` files.
 - `backend/tests/` and `backend/scripts/` have `.gitkeep` placeholders.
 - `frontend/css/`, `frontend/js/`, and `frontend/icons/` have `.gitkeep` placeholders.
-- `infra/README.md` describes the runtime directory's scope.
+- `infra/docker-compose.dev.yml` runs local PostgreSQL 16 with a health check,
+  localhost-only port, and persistent named volume.
+- Root `compose.yaml` imports that configuration for short development commands,
+  preserving the same project name and database volume.
+- `infra/README.md` documents startup, connection, stop, and destructive reset.
 
 The layout below is the **target**, not an inventory of implemented modules.
-FastAPI, database configuration, migrations, UI files, dependency manifests,
-Dockerfiles, Compose, and the app launcher are still later tickets. The empty
-packages do not provide a running application.
+FastAPI, application database sessions, migrations, UI files, dependency
+manifests, Dockerfiles, production Compose, and the app launcher are still
+later tickets. The database is usable independently; the empty packages do not
+provide a running application.
 
 ## Repository layout
 
@@ -70,12 +75,13 @@ tzamot/
 │   ├── manifest.json
 │   └── sw.js                       service worker
 │
-├── infra/                          README exists; runtime configuration planned
+├── infra/                          local Postgres Compose ready; production planned
 │   ├── docker-compose.dev.yml      local: postgres only
 │   ├── docker-compose.prod.yml     Sprint 4: VPS, caddy + api + db
 │   ├── Caddyfile                   Sprint 4
-│   └── README.md                   current scope; production runbook comes later
+│   └── README.md                   local database runbook; production comes later
 │
+├── compose.yaml                    default development entry point; imports infra/
 ├── docs/                           ✅ this site
 ├── mkdocs.yml                      ✅
 ├── .gitignore                      ✅
@@ -88,6 +94,7 @@ tzamot/
 |---|---|
 | **One image, one `backend/`** | `backend/Dockerfile` is the only image we build. Its build context is `backend/`. |
 | **`infra/` owns runtime** | Compose files, Caddyfile, and the provisioning runbook. Nothing in `infra/` is imported by Python. |
+| **Default Compose is development** | Root `compose.yaml` references the infra configuration. Production will use its explicit Sprint 4 file, never the default development entry point. |
 | **Frontend has no build step** | Plain files; Cloudflare Pages serves `frontend/` as-is. |
 | **Commit `uv.lock`** | It is what makes local, CI, and Docker installs identical. |
 | **Commit `.env.example`, never `.env`** | Enforced by `.gitignore`. |
@@ -97,7 +104,8 @@ tzamot/
 
 | Task | Command |
 |---|---|
-| Start local DB | `docker compose -f infra/docker-compose.dev.yml up -d` |
+| Start local DB | `docker compose up -d --wait` |
+| Stop local DB, keeping data | `docker compose down` |
 | Install backend deps | `cd backend && uv sync` |
 | Run API | `cd backend && uv run uvicorn app.main:app --reload` |
 | Migrate | `cd backend && uv run alembic upgrade head` |

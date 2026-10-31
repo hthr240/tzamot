@@ -33,7 +33,7 @@ Follow [Local setup](development/local-setup.md) end to end:
 
 - [ ] Docker Desktop installed and running
 - [ ] `uv` installed; `uv sync` in `backend/` succeeds
-- [ ] `docker compose -f infra/docker-compose.dev.yml up -d` → PostgreSQL running on `:5432`
+- [ ] From the repository root, `docker compose up -d --wait` → PostgreSQL healthy on `127.0.0.1:5432`
 - [ ] `uv run alembic upgrade head` succeeds
 - [ ] `uv run uvicorn app.main:app --reload` serves the API on `:8000` and `/docs` opens
 - [ ] Frontend served locally and talking to the API

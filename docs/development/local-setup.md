@@ -1,10 +1,10 @@
 # Local Setup
 
-!!! warning "Target setup — implementation is still in Sprint 1"
-    Only the backend package and frontend asset directory scaffold exists.
-    The API, UI, Compose file, and app launcher are not implemented yet.
-    The instructions below describe the acceptance target for the infra tickets,
-    not app commands that already work on this scaffold.
+!!! warning "Database ready; the rest of the app is still planned"
+    The directory scaffold and local PostgreSQL Compose setup exist.
+    Step 2 works now. The API, UI, dependency setup, migrations, seed data, and
+    app launcher remain later Sprint 1 tickets. Their instructions below are
+    acceptance targets, not already working app commands.
     No VPS, domain, or production secrets are needed.
 
 A standardised environment on every developer laptop that **mimics production without installing heavy databases on the host OS**. PostgreSQL runs in Docker; Python runs natively for fast iteration and full IDE debugging.
@@ -38,34 +38,42 @@ cd tzamot
 
 ### 2. Start the database
 
-```bash
-docker compose -f infra/docker-compose.dev.yml up -d
-docker compose -f infra/docker-compose.dev.yml ps      # should show db healthy
+```powershell
+docker compose up -d --wait
+docker compose ps
 ```
 
-This starts **only** PostgreSQL, exposed on `localhost:5432`, with a named volume so your data persists between restarts.
+This starts **only PostgreSQL 16** and waits for it to be healthy. The port is
+bound to `127.0.0.1:5432`, not exposed to the LAN. Database, user, and password
+are all `tzamot`: fake local defaults, never production credentials.
 
-??? example "infra/docker-compose.dev.yml (reference)"
-    ```yaml
-    services:
-      db:
-        image: postgres:16
-        environment:
-          POSTGRES_USER: tzamot
-          POSTGRES_PASSWORD: tzamot
-          POSTGRES_DB: tzamot
-        ports:
-          - "5432:5432"
-        volumes:
-          - pg_dev_data:/var/lib/postgresql/data
-        healthcheck:
-          test: ["CMD-SHELL", "pg_isready -U tzamot"]
-          interval: 5s
-          retries: 10
+The root [compose.yaml](https://github.com/hthr240/tzamot/blob/main/compose.yaml)
+imports the [development configuration](https://github.com/hthr240/tzamot/blob/main/infra/docker-compose.dev.yml).
+Run the short commands from the repository root with current Docker Desktop
+and Compose `include` support. This starts the database only, not the future
+API/frontend launcher.
 
-    volumes:
-      pg_dev_data:
-    ```
+The configuration defines project `tzamot-dev` and named volume `pg_dev_data` (normally
+`tzamot-dev_pg_dev_data`). Data survives both restarts and container recreation.
+The first start downloads the image if necessary. No Python environment or
+paid infrastructure is needed to run this database.
+
+The existing explicit startup command remains compatible and uses the same
+data. It is also available on Compose versions without `include`:
+
+```powershell
+docker compose -f infra\docker-compose.dev.yml up -d --wait --wait-timeout 60
+```
+
+Add `--wait-timeout 60` to the short command for an explicit startup deadline.
+To connect:
+
+```powershell
+docker compose exec db psql -U tzamot -d tzamot
+```
+
+Use `\q` to exit the SQL prompt. The API's database session and migrations are
+not implemented by this infrastructure ticket.
 
 ### 3. Python environment
 
@@ -154,7 +162,7 @@ Serve the `frontend/` directory with any static server:
 ## Daily routine
 
 ```bash
-docker compose -f infra/docker-compose.dev.yml up -d    # DB (from repo root)
+docker compose up -d --wait
 cd backend && uv run uvicorn app.main:app --reload       # API
 # + Live Server for the frontend
 ```
@@ -171,7 +179,7 @@ This updates `pyproject.toml` **and** `uv.lock`. Commit both.
 
 ## Verify everything works
 
-- [ ] `docker compose -f infra/docker-compose.dev.yml ps` → `healthy`
+- [ ] `docker compose ps` → `healthy`
 - [ ] `uv run alembic current` shows the latest revision
 - [ ] <http://localhost:8000/docs> loads
 - [ ] `uv run pytest` passes
@@ -180,16 +188,33 @@ This updates `pyproject.toml` **and** `uv.lock`. Commit both.
 
 ## Resetting
 
-```bash
-docker compose -f infra/docker-compose.dev.yml down -v   # drops the volume = fresh DB
-docker compose -f infra/docker-compose.dev.yml up -d
-cd backend && uv run alembic upgrade head && uv run python scripts/seed_test_db.py
+Stopping normally keeps data:
+
+```powershell
+docker compose down
 ```
+
+!!! danger "Deleting local data is explicit and irreversible"
+    `down --volumes` removes the local database volume. Do not run it unless
+    you intend to erase that project's data. Never use a production Compose
+    file or an unrelated project name for this reset.
+
+```powershell
+docker compose -p tzamot-dev down --volumes
+docker compose -p tzamot-dev up -d --wait
+```
+
+After migrations and seeding exist, repeat steps 5 and 6 after a reset.
+Those backend commands are still planned. See the
+[infrastructure runbook](https://github.com/hthr240/tzamot/blob/main/infra/README.md)
+for stop and connection commands.
 
 ## Troubleshooting
 
 ??? failure "Port 5432 already in use"
-    A host PostgreSQL is running. Stop it, or change the host port mapping in `infra/docker-compose.dev.yml` to `5433:5432` and update `DATABASE_URL` in `.env`.
+    Another service may own the port. Inspect it first; do not stop an unrelated
+    process. If a port change is approved, change only the host port in
+    `127.0.0.1:5433:5432` and update the future backend `DATABASE_URL` to match.
 
 ??? failure "CORS error in the browser console"
     Add your static server origin (e.g. `http://127.0.0.1:5500`) to `CORS_ORIGINS` in `.env` and restart uvicorn.
