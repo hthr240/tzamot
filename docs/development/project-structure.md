@@ -26,11 +26,9 @@ The directory skeleton from #6 exists:
 - `infra/README.md` documents startup, connection, stop, and destructive reset.
 
 The layout below is the **target**, not an inventory of implemented modules.
-The FastAPI dependency and settings are ready, but the application, database
-sessions, migrations, UI files, Dockerfiles, production Compose, and app
-launcher are still later tickets. The database and Python environment are
-usable independently; the package skeleton does not provide a running
-application.
+The FastAPI application factory, health endpoint, and settings are ready.
+Database sessions, migrations, feature routes, UI files, Dockerfiles,
+production Compose, and the app launcher are still later tickets.
 
 ## Repository layout
 
@@ -44,16 +42,16 @@ tzamot/
 │   ├── ISSUE_TEMPLATE/            story.yml · task.yml · bug.yml
 │   └── PULL_REQUEST_TEMPLATE.md
 │
-├── backend/                        dependencies ready; FastAPI app planned
+├── backend/                        basic FastAPI app and dependencies ready
 │   ├── app/
-│   │   ├── main.py                 FastAPI app factory, middleware, router registration
+│   │   ├── main.py                 ✅ FastAPI app factory and router registration
 │   │   ├── core/
 │   │   │   ├── config.py           ✅ typed settings from environment variables
 │   │   │   ├── logging.py          Structured logging setup
 │   │   │   └── db.py               Engine, session dependency
 │   │   ├── models/                 SQLAlchemy: service.py · availability.py · appointment.py
 │   │   ├── schemas/                Pydantic request/response models
-│   │   ├── routers/                services · availability · slots · appointments · admin · health
+│   │   ├── routers/                health ready; feature routers planned
 │   │   └── services/               Use-cases: slots.py (algorithm) · booking.py · cancellation.py
 │   ├── alembic/                    Migrations (versions/)
 │   ├── alembic.ini

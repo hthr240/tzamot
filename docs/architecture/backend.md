@@ -40,6 +40,24 @@ flowchart TB
 | **Models** | Tables, relationships, constraints — see [Data model](data-model.md) |
 | **Logging middleware** | Correlation id per request, duration, unhandled exception capture with stack trace |
 
+## Application entry point
+
+`app.main.create_app()` builds an isolated FastAPI application from validated
+settings. Uvicorn uses the module-level `app` created by that factory:
+
+```powershell
+uv run uvicorn app.main:app --reload
+```
+
+`GET /health` returns the process status and configured environment:
+
+```json
+{"status": "ok", "env": "local"}
+```
+
+Swagger at `/docs`, ReDoc at `/redoc`, and the OpenAPI document are available
+in local and CI environments. All three are disabled in production.
+
 ## API surface (MVP)
 
 The exact paths are finalised during Sprints 2–3. The resources are fixed:
