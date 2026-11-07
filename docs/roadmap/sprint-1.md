@@ -46,7 +46,7 @@ data (#16), CI (#22), and the frontend shell (#27).
 
 - [x] Database engine, `get_db` dependency, and isolated test sessions — #18
 - [x] Initial SQLAlchemy models: `Service`, `WeeklyHours`, `AvailabilityDay`, `Availability`, `Appointment` — #19; see [Data model](../architecture/data-model.md)
-- [ ] Initialise Alembic and create the first baseline migration
+- [x] Initialise Alembic and create the first baseline migration — #20
 - [ ] `scripts/seed_test_db.py` with realistic data
 
 ### CI pipelines

@@ -1,10 +1,10 @@
 # Data Model
 
-!!! success "Models landed — migrations next"
-    SQLAlchemy models in `backend/app/models/` match the tables below
-    (`Service`, `WeeklyHours`, `AvailabilityDay`, `Availability`, `Appointment`).
-    The first Alembic migration in #20 will create them in PostgreSQL. Until
-    then, tests build tables with `Base.metadata.create_all` on `tzamot_test`.
+!!! success "Models and baseline migration"
+    SQLAlchemy models in `backend/app/models/` match the tables below. The
+    baseline Alembic revision creates them in PostgreSQL via
+    `uv run alembic upgrade head`. Model unit tests may still use
+    `Base.metadata.create_all` on `tzamot_test`.
 
 ## Entity-relationship diagram
 

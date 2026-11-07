@@ -1,11 +1,8 @@
 # Local Setup
 
-!!! warning "Database and basic API ready; feature work is still planned"
-    The directory scaffold, local PostgreSQL Compose setup, and locked Python
-    dependencies exist. Steps 2 through 4 and the basic API in step 7 work now.
-    Database integration, UI, migrations, seed data, and the app launcher remain
-    later Sprint 1 tickets. Their instructions below are acceptance targets,
-    not already working app commands.
+!!! warning "API, DB, models, and migrations ready; seed and UI still planned"
+    Steps 2 through 5 and the basic API in step 7 work now. Seed data, the
+    frontend shell, CI, and the app launcher remain later Sprint 1 tickets.
     No VPS, domain, or production secrets are needed.
 
 A standardised environment on every developer laptop that **mimics production without installing heavy databases on the host OS**. PostgreSQL runs in Docker; Python runs natively for fast iteration and full IDE debugging.
@@ -122,7 +119,30 @@ The defaults match the dev compose file. **Never commit `.env`.** Keys are docum
 
 ### 5. Migrate
 
+From `backend/`, apply every pending migration to the database in `DATABASE_URL`
+(defaults to the local Compose Postgres):
+
 ```bash
+uv run alembic upgrade head
+```
+
+Check which revision is applied:
+
+```bash
+uv run alembic current
+```
+
+You should see the latest revision id and `(head)`. Confirm the models still
+match the database:
+
+```bash
+uv run alembic check
+```
+
+To wipe the schema and start over (destroys table data in that database):
+
+```bash
+uv run alembic downgrade base
 uv run alembic upgrade head
 ```
 
