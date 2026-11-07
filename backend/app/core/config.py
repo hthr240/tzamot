@@ -26,7 +26,7 @@ class Settings(BaseSettings):
 
     # These defaults match the local Docker and frontend setup.
     env: Environment = "local"
-    database_url: str = "postgresql+psycopg://tzamot:tzamot@localhost:5432/tzamot"
+    database_url: str = "postgresql+psycopg://tzamot:tzamot@127.0.0.1:5432/tzamot"
     log_level: LogLevel = "DEBUG"
     # NoDecode lets the validator parse the simple comma-separated value.
     cors_origins: Annotated[list[str], NoDecode] = Field(
