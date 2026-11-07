@@ -50,7 +50,7 @@ tzamot/
 │   │   │   ├── errors.py           ✅ correlated HTTP 500 errors and tracebacks
 │   │   │   ├── logging.py          ✅ console logging and request ID middleware
 │   │   │   └── db.py               ✅ Engine, session factory, get_db dependency
-│   │   ├── models/                 SQLAlchemy: service.py · availability.py · appointment.py
+│   │   ├── models/                 ✅ base · service · weekly_hours · availability_day · availability · appointment
 │   │   ├── schemas/                Pydantic request/response models
 │   │   ├── routers/                health ready; feature routers planned
 │   │   └── services/               Use-cases: slots.py (algorithm) · booking.py · cancellation.py
