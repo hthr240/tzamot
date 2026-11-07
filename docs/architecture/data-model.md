@@ -1,7 +1,10 @@
 # Data Model
 
-!!! warning "Draft — finalised in Sprint 1"
-    [ADR-008](../decisions.md#adr-008-materialised-weekly-working-hours) fixes the weekly-hours tables. Column details below stay a proposal until the SQLAlchemy models and the first Alembic migration in [Sprint 1](../roadmap/sprint-1.md) land. Update this page when they do.
+!!! success "Models landed — migrations next"
+    SQLAlchemy models in `backend/app/models/` match the tables below
+    (`Service`, `WeeklyHours`, `AvailabilityDay`, `Availability`, `Appointment`).
+    The first Alembic migration in #20 will create them in PostgreSQL. Until
+    then, tests build tables with `Base.metadata.create_all` on `tzamot_test`.
 
 ## Entity-relationship diagram
 
