@@ -49,11 +49,19 @@ settings. Uvicorn uses the module-level `app` created by that factory:
 uv run uvicorn app.main:app --reload
 ```
 
-`GET /health` returns the process status and configured environment:
+`GET /health` returns the process status, configured environment, and a live
+database check (`SELECT 1`). When the database answers, the response is:
 
 ```json
-{"status": "ok", "env": "local"}
+{"status": "ok", "env": "local", "database": "ok"}
 ```
+
+When the database is unreachable, the API returns HTTP 503 with
+`"status": "error"` and `"database": "error"`.
+
+`app/core/db.py` builds the SQLAlchemy engine from `DATABASE_URL`. Engine SQL
+echo is enabled only when `LOG_LEVEL=DEBUG`. FastAPI routes take a request-scoped
+session through the `get_db` dependency, which always closes the session.
 
 Swagger at `/docs`, ReDoc at `/redoc`, and the OpenAPI document are available
 in local and CI environments. All three are disabled in production.

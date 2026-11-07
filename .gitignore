@@ -17,9 +17,10 @@ venv/
 # MkDocs build output
 site/
 
-# IDE
+# IDE / Cursor
 .vscode/
 .idea/
+.cursor/
 *.swp
 
 # OS

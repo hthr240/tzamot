@@ -40,7 +40,11 @@ def test_request_log_matches_response_id(
     )
     assert match is not None
     assert float(match.group(1)) >= 0
-    assert response.json() == {"status": "ok", "env": "local"}
+    assert response.json() == {
+        "status": "ok",
+        "env": "local",
+        "database": "ok",
+    }
 
 
 def test_request_ids_are_generated_not_trusted(client: TestClient) -> None:

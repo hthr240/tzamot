@@ -26,9 +26,9 @@ The directory skeleton from #6 exists:
 - `infra/README.md` documents startup, connection, stop, and destructive reset.
 
 The layout below is the **target**, not an inventory of implemented modules.
-The FastAPI application factory, health endpoint, settings, and production
-backend image are ready. Database sessions, migrations, feature routes, UI
-files, production Compose, and the app launcher are still later tickets.
+The FastAPI application factory, health endpoint, settings, database sessions,
+and production backend image are ready. Migrations, feature routes, UI files,
+production Compose, and the app launcher are still later tickets.
 
 ## Repository layout
 
@@ -49,7 +49,7 @@ tzamot/
 │   │   │   ├── config.py           ✅ typed settings from environment variables
 │   │   │   ├── errors.py           ✅ correlated HTTP 500 errors and tracebacks
 │   │   │   ├── logging.py          ✅ console logging and request ID middleware
-│   │   │   └── db.py               Engine, session dependency
+│   │   │   └── db.py               ✅ Engine, session factory, get_db dependency
 │   │   ├── models/                 SQLAlchemy: service.py · availability.py · appointment.py
 │   │   ├── schemas/                Pydantic request/response models
 │   │   ├── routers/                health ready; feature routers planned

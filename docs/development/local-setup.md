@@ -73,8 +73,11 @@ To connect:
 docker compose exec db psql -U tzamot -d tzamot
 ```
 
-Use `\q` to exit the SQL prompt. The API's database session and migrations are
-not implemented by this infrastructure ticket.
+Use `\q` to exit the SQL prompt.
+
+Pytest uses a separate database named `tzamot_test` so integration tests never
+write to the developer `tzamot` database. The suite creates that database when
+missing. Override the URL with `TEST_DATABASE_URL` if needed.
 
 ### 3. Python environment
 
