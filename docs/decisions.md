@@ -165,12 +165,59 @@ rather than editing it.
 
 ---
 
+## ADR-008 · Materialised weekly working hours
+
+**Date:** 2026-11-07 · **Status:** ✅ Decided
+
+**Context.** The owner keeps a default week, confirms next week's hours, and
+changes a single day when something comes up during the week. Those are
+separate edits: confirming Tuesday must not rewrite the default week, and
+changing the default week must not wipe a day she already confirmed. Slot
+calculation reads concrete windows for one date. The SQLAlchemy models in #19
+need this shape before they are written.
+
+**Options.**
+
+1. **Materialise.** Store the default week in `weekly_hours`. Copy it into
+   dated `availability` rows. Confirmation and mid-week edits change those
+   dated rows. Queries read the dated rows.
+2. **Compute.** Store the default week plus exceptions, and merge them on every
+   slot or schedule read. A week is not stored as its own data.
+
+**Decision.** Materialise. See [Data model → Availability](architecture/data-model.md#availability).
+
+Three tables:
+
+- `weekly_hours` is the default week: `weekday` (`0` Sunday through `6`
+  Saturday), `start_time`, `end_time`. Several rows on one weekday are a split
+  shift. A weekday with no rows is closed in the template.
+- `availability_days` is one row per generated date, with a `confirmed` flag.
+- `availability` holds the windows for a date. The slot algorithm reads this
+  table only. Several rows are a split shift. A confirmed date with no windows
+  is a closed day.
+
+A generator copies the template onto upcoming dates. Sprint 2 chooses how many
+weeks ahead to keep; the tables do not depend on that number. The next week is
+always present so she can verify it. Verifying a week sets `confirmed` on
+those dates and leaves their windows as they are. Changing one day replaces
+that date's windows and sets `confirmed`. Editing the template rebuilds windows
+only where `confirmed` is false.
+
+**Consequences.** A closed day needs its `availability_days` row. Missing
+windows would otherwise mean both "she closed it" and "it has not been
+generated yet." Sprint 2 implements generation, weekly confirmation, and
+single-day edits on top of these tables. #19 only models them.
+
+**Revisit when:** she needs more than one default week, such as a separate
+holiday pattern. Supersede this ADR rather than editing it.
+
+---
+
 ## Pending decisions
 
 | Topic | Options | Owner | Target |
 |---|---|---|---|
 | Domain name | `*.co.il` registrar | Team lead | Before Sprint 4 |
-| Weekly working-hours model | Materialise into `availability` rows vs compute at query time — see [Data model](architecture/data-model.md#availability) | Both | Sprint 1–2 |
 | Admin authentication | Static `ADMIN_TOKEN` header vs something stronger | Both | Sprint 2 |
 | Slot granularity | 15 / 30 min | Both + owner | Sprint 3 |
 | Client cancellation lookup | Token link vs phone lookup | Both | Sprint 4 |

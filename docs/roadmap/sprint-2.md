@@ -17,7 +17,7 @@
 
 - [ ] Endpoints to set working hours (start time, end time) for specific dates
 - [ ] Support multiple windows per day (split shifts) and removing windows (block time)
-- [ ] Decide & implement the weekly template approach — see [Data model](../architecture/data-model.md#availability)
+- [ ] Implement weekly confirmation and single-day edits on the materialised template — [ADR-008](../decisions.md#adr-008-materialised-weekly-working-hours)
 - [ ] **Logging:** `availability.created`, `availability.deleted`
 - [ ] Tests
 

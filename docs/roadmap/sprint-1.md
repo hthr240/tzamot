@@ -84,7 +84,7 @@ A new developer can:
 
 | Question | Options | Decision |
 |---|---|---|
-| Weekly working-hours template model | Materialise into `availability` vs compute at query time | pending — see [Data model](../architecture/data-model.md#availability) |
+| ~~Weekly working-hours template model~~ | Materialise into `availability` vs compute at query time | **Materialise** — [ADR-008](../decisions.md#adr-008-materialised-weekly-working-hours) |
 | ~~Logging library~~ | `loguru` vs stdlib `logging` | **stdlib `logging`** — [ADR-010](../decisions.md#adr-010-standard-library-logging) |
 | ~~Dependency management~~ | | **uv + pyproject.toml** — [ADR-004](../decisions.md#adr-004-uv-pyprojecttoml-for-dependencies) |
 | ~~Python version~~ | | **3.13** — [ADR-002](../decisions.md#adr-002-python-313) |

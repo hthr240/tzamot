@@ -1,7 +1,7 @@
 # Data Model
 
 !!! warning "Draft — finalised in Sprint 1"
-    The roadmap names three tables: **Services**, **Availability**, **Appointments**. The fields below are a proposal derived from the PRD; the SQLAlchemy models and the first Alembic migration written in [Sprint 1](../roadmap/sprint-1.md) are the real source of truth. Update this page when they land.
+    [ADR-008](../decisions.md#adr-008-materialised-weekly-working-hours) fixes the weekly-hours tables. Column details below stay a proposal until the SQLAlchemy models and the first Alembic migration in [Sprint 1](../roadmap/sprint-1.md) land. Update this page when they do.
 
 ## Entity-relationship diagram
 
@@ -19,9 +19,24 @@ erDiagram
         timestamptz updated_at
     }
 
+    WEEKLY_HOURS {
+        int id PK
+        int weekday
+        time start_time
+        time end_time
+    }
+
+    AVAILABILITY_DAY ||--o{ AVAILABILITY : "has windows"
+    AVAILABILITY_DAY {
+        date date PK
+        bool confirmed
+        timestamptz created_at
+        timestamptz updated_at
+    }
+
     AVAILABILITY {
         int id PK
-        date date
+        date date FK
         time start_time
         time end_time
         timestamptz created_at
@@ -40,7 +55,7 @@ erDiagram
     }
 ```
 
-`AVAILABILITY` has no foreign keys — it is a pure "the admin is working on `date` from `start_time` to `end_time`" fact. Slots are computed by intersecting it with `APPOINTMENT`.
+`WEEKLY_HOURS` is the default week. `AVAILABILITY_DAY` is one generated date, and `AVAILABILITY` is a concrete window on that date. Slots are computed from `AVAILABILITY` minus booked `APPOINTMENT` rows. See [ADR-008](../decisions.md#adr-008-materialised-weekly-working-hours).
 
 ## Tables
 
@@ -55,26 +70,47 @@ erDiagram
 | `is_active` | bool | not null, default `true` | Disabled services are hidden, never deleted |
 | `created_at` / `updated_at` | timestamptz | | |
 
-### `availability`
+### `weekly_hours`
+
+The default week. Editing it does not change a date she has already confirmed.
 
 | Column | Type | Constraints | Notes |
 |---|---|---|---|
 | `id` | serial | PK | |
-| `date` | date | not null, indexed | |
+| `weekday` | smallint | not null, `0–6` | `0` Sunday through `6` Saturday |
 | `start_time` | time | not null | |
 | `end_time` | time | not null, `> start_time` | |
 
+- Several rows on the same weekday = **split shift** in the template.
+- No row for a weekday = that weekday is closed in the template.
+
+### `availability_days`
+
+One row for each date the generator has created from the template.
+
+| Column | Type | Constraints | Notes |
+|---|---|---|---|
+| `date` | date | PK | |
+| `confirmed` | bool | not null, default `false` | `true` after she verifies or edits that date |
+| `created_at` / `updated_at` | timestamptz | | |
+
+A generator copies `weekly_hours` onto upcoming dates. Sprint 2 chooses how many weeks ahead to keep. The next week is always generated so she can verify it. Verifying a week sets `confirmed` and leaves the windows unchanged. Changing the template rebuilds windows only where `confirmed` is false.
+
+### `availability`
+
+The windows clients can book. The slot algorithm reads this table and does not consult the template.
+
+| Column | Type | Constraints | Notes |
+|---|---|---|---|
+| `id` | serial | PK | |
+| `date` | date | FK → `availability_days.date`, not null, indexed | |
+| `start_time` | time | not null | |
+| `end_time` | time | not null, `> start_time` | |
+| `created_at` | timestamptz | | |
+
 - Several rows on the same date = **split shift**.
-- No row on a date = closed.
-- "Block hours" is modelled by **not** having an availability row covering them (shrink or split the window).
-
-??? question "Weekly working-hours template"
-    The PRD says the admin defines hours *on a weekly basis* and then customises specific days. Two options:
-
-    1. **Materialise**: a `weekly_hours` template table (`weekday`, `start`, `end`) that a job expands into `availability` rows N weeks ahead. Overrides edit the `availability` rows directly.
-    2. **Compute**: store the template plus an `availability_overrides` table and merge at query time.
-
-    Option 1 is simpler to reason about and query. Decide in Sprint 1 / early Sprint 2.
+- A confirmed date with no rows = closed.
+- Blocking hours replaces that date's windows and sets `availability_days.confirmed`. The template and other dates stay as they are.
 
 ### `appointments`
 
