@@ -27,8 +27,9 @@ The directory skeleton from #6 exists:
 
 The layout below is the **target**, not an inventory of implemented modules.
 The FastAPI application factory, health endpoint, settings, database sessions,
-and production backend image are ready. Migrations, feature routes, UI files,
-production Compose, and the app launcher are still later tickets.
+SQLAlchemy models, Alembic baseline, and production backend image are ready.
+Seed data, feature routes, UI files, production Compose, and the app launcher
+are still later tickets.
 
 ## Repository layout
 
@@ -54,8 +55,8 @@ tzamot/
 │   │   ├── schemas/                Pydantic request/response models
 │   │   ├── routers/                health ready; feature routers planned
 │   │   └── services/               Use-cases: slots.py (algorithm) · booking.py · cancellation.py
-│   ├── alembic/                    Migrations (versions/)
-│   ├── alembic.ini
+│   ├── alembic/                    ✅ env.py + versions/ (baseline schema)
+│   ├── alembic.ini                 ✅ points script location; URL from Settings
 │   ├── scripts/
 │   │   └── seed_test_db.py
 │   ├── tests/

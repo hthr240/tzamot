@@ -1,0 +1,5 @@
+Alembic migrations for the Tzamot API.
+
+- `env.py` loads `DATABASE_URL` via `app.core.config.Settings`.
+- Autogenerate compares PostgreSQL to `app.models.Base.metadata`.
+- Run from `backend/`: `uv run alembic upgrade head`.
