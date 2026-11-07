@@ -1,8 +1,8 @@
 # Local Setup
 
-!!! warning "API, DB, models, and migrations ready; seed and UI still planned"
-    Steps 2 through 5 and the basic API in step 7 work now. Seed data, the
-    frontend shell, CI, and the app launcher remain later Sprint 1 tickets.
+!!! warning "API, DB, models, migrations, and seed ready; UI still planned"
+    Steps 2 through 6 and the basic API in step 7 work now. The frontend shell,
+    CI, and the app launcher remain later Sprint 1 tickets.
     No VPS, domain, or production secrets are needed.
 
 A standardised environment on every developer laptop that **mimics production without installing heavy databases on the host OS**. PostgreSQL runs in Docker; Python runs natively for fast iteration and full IDE debugging.
@@ -152,7 +152,7 @@ uv run alembic upgrade head
 uv run python scripts/seed_test_db.py
 ```
 
-Gives you realistic services, two weeks of availability, and a few appointments to click around with. Same script CI uses — see [CI pipeline](ci-pipeline.md#database-seeding).
+Replaces the domain tables with a fixed dataset: 5 services, two weeks of hours from Sunday 1 November 2026 (one split shift, one closed day), and four appointments. Running it again keeps the same row counts. Dates do not follow the real clock. Same script CI will use — see [CI pipeline](ci-pipeline.md#database-seeding).
 
 ### 7. Run the API
 

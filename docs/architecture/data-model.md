@@ -151,7 +151,7 @@ With this in place a race between two clients results in a constraint violation 
 
 ## Seed data (CI & local)
 
-`scripts/seed_test_db.py` populates a realistic dataset so integration tests exercise real logic:
+`scripts/seed_test_db.py` replaces the domain tables with a fixed dataset (anchor Sunday 1 November 2026) so local setup and CI share the same rows:
 
 - 5 predefined services with varied durations (30 – 240 min)
 - 2 weeks of availability, including at least one split-shift day and one closed day
