@@ -1,7 +1,8 @@
 # CI Pipeline
 
 The backend quality gate lives in `.github/workflows/ci.yml` (#24).
-It runs on every pull request and on every push to `main`.
+It runs when a pull request targeting `main` is opened, when new commits
+are pushed to that pull request, and when the pull request is reopened.
 The `backend` check is required to merge into `main` (#31). A pull request
 with a failing or missing run cannot merge. Peer approvals stay at zero
 while development is solo.
@@ -48,9 +49,9 @@ flowchart LR
     name: CI
 
     on:
-      push:
-        branches: [main]
       pull_request:
+        branches: [main]
+        types: [opened, synchronize, reopened]
 
     jobs:
       backend:

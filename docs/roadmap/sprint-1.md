@@ -70,6 +70,15 @@ writing or testing the app locally. Do not buy hosting or a domain before MVP re
 - [x] Python 3.13 + uv — [ADR-002](../decisions.md#adr-002-python-313), [ADR-004](../decisions.md#adr-004-uv-pyprojecttoml-for-dependencies)
 - [x] Secrets handling per environment — [Environments → Where secrets live](../architecture/environments.md#where-secrets-live)
 
+## Extra work
+
+Discovered while doing a ticket, outside that ticket's acceptance criteria.
+The branch stays attached to its ticket; this list is the record of the extra change.
+
+| Branch | Ticket | Outside the ticket |
+|---|---|---|
+| `chore/31-require-backend-check` | #31 require the `backend` check | CI on `main` failed because `python scripts/seed_test_db.py` could not import `app`. This branch runs the seed script as a module. That import fix is seed/CI behavior from #24, not the protection rule. The same branch also limits CI to pull requests targeting `main`. #24 had CI run on pushes to `main` as well. |
+
 ## Definition of done
 
 A new developer can:

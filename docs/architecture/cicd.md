@@ -3,7 +3,7 @@
 How code moves from a developer's laptop to production, and what checks it passes on the way.
 
 !!! info "Design, not current deployment"
-    The backend CI workflow runs on every pull request and on pushes to `main`.
+    The backend CI workflow runs on pull requests targeting `main`.
     Image publishing, the production Environment, deployment secrets, and SSH
     delivery are deferred to Sprint 4. No paid hosting or domain is needed
     before local MVP readiness.

@@ -1,10 +1,10 @@
 # Environments
 
 The target architecture has **three environments**. Local development is in
-progress, and the backend CI workflow runs on every pull request. Production
-is deferred to Sprint 4: no VPS or domain purchase before the local MVP is
-ready. Hostnames in
-this page describe the design, not an already purchased domain or live app.
+progress, and the backend CI workflow runs on pull requests targeting `main`.
+Production is deferred to Sprint 4: no VPS or domain purchase before the local
+MVP is ready. Hostnames in this page describe the design, not an already
+purchased domain or live app.
 Staging is deliberately deferred — see [Decision log](../decisions.md#adr-003-no-staging-environment-for-the-mvp).
 
 ```mermaid
