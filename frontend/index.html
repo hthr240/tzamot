@@ -1,0 +1,73 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>צמות</title>
+    <link rel="stylesheet" href="css/base.css" />
+  </head>
+  <body>
+    <main>
+      <h1>צמות</h1>
+      <p>עמוד הלקוח. בשלב זה בודקים רק שהשרת זמין.</p>
+      <section
+        id="health-status"
+        class="status"
+        data-state="loading"
+        aria-live="polite"
+      >
+        <strong class="loading-dot">בודקים את השרת</strong>
+      </section>
+      <p class="meta"><a href="admin.html">מעבר למסך הניהול</a></p>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script src="js/api.js"></script>
+    <script>
+      const statusEl = document.getElementById("health-status");
+
+      function setLoading(loading) {
+        if (!loading) {
+          return;
+        }
+        statusEl.dataset.state = "loading";
+        statusEl.innerHTML =
+          '<strong class="loading-dot">בודקים את השרת</strong>';
+      }
+
+      function showOk(data) {
+        statusEl.dataset.state = "ok";
+        statusEl.innerHTML = `
+          <strong>השרת פעיל</strong>
+          <p class="meta">סביבה: ${data.env} · מסד נתונים: ${data.database}</p>
+        `;
+      }
+
+      function showError(message) {
+        statusEl.dataset.state = "error";
+        statusEl.innerHTML = `
+          <strong>לא ניתן להתחבר לשרת</strong>
+          <p class="meta">${message}</p>
+        `;
+      }
+
+      apiRequest("/health", {}, { onLoading: setLoading })
+        .then(({ data }) => {
+          if (data && data.status === "ok") {
+            showOk(data);
+            return;
+          }
+          showError("השרת השיב שיש בעיה.");
+        })
+        .catch((error) => {
+          if (error && error.status) {
+            showError(`שגיאת שרת ${error.status}.`);
+            return;
+          }
+          showError(
+            "ייתכן שה־API לא רץ, או ש־CORS עדיין לא מוגדר (#29).",
+          );
+        });
+    </script>
+  </body>
+</html>
