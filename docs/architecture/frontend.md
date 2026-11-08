@@ -39,7 +39,7 @@ stateDiagram-v2
 ## Talking to the API
 
 - All data access goes through `fetch()` to the API base URL.
-- The base URL differs per environment (`http://localhost:8000` locally, `https://api.tzamot.co.il` in production). Keep it in a single `config.js` — the exact mechanism (build-time replacement vs. hostname detection) is an infra-phase decision.
+- The base URL differs per environment (`http://localhost:8000` locally, `https://api.tzamot.co.il` in production). `js/config.js` picks it by hostname.
 - Always show a **loading spinner** while a request is in flight.
 - Map API errors to **friendly Hebrew messages** — e.g. `409 Conflict` → "השעה הזו נתפסה הרגע, אנא בחרי שעה אחרת".
 

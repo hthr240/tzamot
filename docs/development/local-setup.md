@@ -183,7 +183,12 @@ Serve the `frontend/` directory with any static server:
     python -m http.server 5500
     ```
 
-`frontend/js/config.js` points at `http://localhost:8000` whenever the hostname isn't the production domain. The API's default `CORS_ORIGINS` already includes `http://127.0.0.1:5500` and `http://localhost:5500`.
+`frontend/js/config.js` points at `http://localhost:8000` whenever the hostname
+isn't the production domain. Open <http://127.0.0.1:5500> — the client page
+calls `/health` and shows the result in Hebrew. Until #29 lands, the browser
+may still report a CORS error even though the shell and API wiring are in
+place. The API's default `CORS_ORIGINS` already lists
+`http://127.0.0.1:5500` and `http://localhost:5500`.
 
 ## Daily routine
 
@@ -210,7 +215,7 @@ This updates `pyproject.toml` **and** `uv.lock`. Commit both.
 - [ ] <http://localhost:8000/docs> loads
 - [ ] `uv run pytest` passes
 - [ ] `uv run ruff check . && uv run black --check .` pass
-- [ ] Frontend loads and lists the seeded services
+- [ ] Frontend loads on `:5500` and shows the `/health` result (CORS lands in #29)
 
 ## Resetting
 

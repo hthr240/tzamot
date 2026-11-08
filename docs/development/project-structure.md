@@ -29,8 +29,9 @@ The layout below is the **target**, not an inventory of implemented modules.
 The FastAPI application factory, health endpoint, settings, database sessions,
 SQLAlchemy models, Alembic baseline, production backend image, and backend CI
 workflow are ready.
-Seed data, feature routes, UI files, production Compose, and the app launcher
-are still later tickets.
+Feature routes, booking UI, production Compose, and the app launcher are still
+later tickets. The frontend shell (`index.html`, `admin.html`, config, and API
+helper) is ready; CORS for the browser call is #29.
 
 ## Repository layout
 
@@ -69,13 +70,14 @@ tzamot/
 │   ├── uv.lock                     locked versions — commit it
 │   └── .env.example                ✅ every config key with local defaults
 │
-├── frontend/                       asset directories exist; static PWA planned
-│   ├── index.html                  client booking flow
-│   ├── admin.html                  hidden admin UI
+├── frontend/                       static shell ready; booking UI planned
+│   ├── index.html                  ✅ Hebrew RTL shell; calls `/health` on load
+│   ├── admin.html                  ✅ placeholder using the same API config
 │   ├── css/
+│   │   └── base.css                ✅ system font stack, mobile-first base
 │   ├── js/
-│   │   ├── config.js               API base URL by hostname
-│   │   ├── api.js                  fetch wrapper, errors, spinner
+│   │   ├── config.js               ✅ API base URL by hostname
+│   │   ├── api.js                  ✅ fetch wrapper, errors, loading hook
 │   │   ├── strings.js              Hebrew UI copy
 │   │   ├── booking.js              client flow
 │   │   └── admin.js                admin flow
