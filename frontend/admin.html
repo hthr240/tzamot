@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="he" dir="rtl">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <title>צמות · ניהול</title>
+    <link rel="stylesheet" href="css/base.css" />
+  </head>
+  <body>
+    <main>
+      <h1>ניהול</h1>
+      <p>
+        מסך זמני. הגדרות השירותים והזמינות יגיעו בספרינט הבא. כתובת ה־API
+        נטענת מ־<code>js/config.js</code>.
+      </p>
+      <section class="status" data-state="loading">
+        <strong>API</strong>
+        <p id="api-base" class="meta"></p>
+      </section>
+      <p class="meta"><a href="index.html">חזרה לעמוד הלקוח</a></p>
+    </main>
+
+    <script src="js/config.js"></script>
+    <script>
+      document.getElementById("api-base").textContent = API_BASE;
+    </script>
+  </body>
+</html>
