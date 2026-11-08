@@ -27,7 +27,7 @@ flowchart LR
 | **Format** | `uv run black --check .` | Any file isn't Black-formatted |
 | **Ephemeral DB** | GitHub Actions **service container** `postgres:16` with a health check | DB fails to start |
 | **Migrate** | `uv run alembic upgrade head` | A migration is broken or missing |
-| **Seed** | `uv run python scripts/seed_test_db.py` | Seed script fails (often = model/migration mismatch) |
+| **Seed** | `uv run python -m scripts.seed_test_db` | Seed script fails (often = model/migration mismatch) |
 | **Test** | `uv run pytest -v` | Any test fails |
 | **Docker build** | `docker build -t tzamot-api:ci .` from `backend/` (not pushed) | `Dockerfile` is broken — caught before merge, so deploys never fail on build |
 
@@ -102,7 +102,7 @@ flowchart LR
             run: uv run alembic upgrade head
 
           - name: Seed test database
-            run: uv run python scripts/seed_test_db.py
+            run: uv run python -m scripts.seed_test_db
 
           - name: Tests
             run: uv run pytest -v

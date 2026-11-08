@@ -138,7 +138,7 @@ All commands from `backend/`, via `uv run` so the project's virtual environment 
 | Local dev | `uv run uvicorn app.main:app --reload --port 8000` (DB in Docker) |
 | Container | `uvicorn app.main:app --host 0.0.0.0 --port 8000` via the image's `CMD` |
 | Migrations | `uv run alembic upgrade head` |
-| Seed (CI / local) | `uv run python scripts/seed_test_db.py` |
+| Seed (CI / local) | `uv run python -m scripts.seed_test_db` |
 | Tests | `uv run pytest` |
 
 ## Dockerfile

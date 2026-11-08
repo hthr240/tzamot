@@ -149,7 +149,7 @@ uv run alembic upgrade head
 ### 6. Seed (optional but recommended)
 
 ```bash
-uv run python scripts/seed_test_db.py
+uv run python -m scripts.seed_test_db
 ```
 
 Replaces the domain tables with a fixed dataset: 5 services, two weeks of hours from Sunday 1 November 2026 (one split shift, one closed day), and four appointments. Running it again keeps the same row counts. Dates do not follow the real clock. Same script CI will use — see [CI pipeline](ci-pipeline.md#database-seeding).
