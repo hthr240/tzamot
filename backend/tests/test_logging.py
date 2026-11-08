@@ -177,6 +177,17 @@ def test_failed_request_does_not_leak_context(
     assert request_id_context.get() == "-"
 
 
+def test_browser_probe_paths_are_not_logged(
+    capsys: pytest.CaptureFixture[str],
+) -> None:
+    app = create_app(Settings(env="local", log_level="INFO", _env_file=None))
+    with TestClient(app) as client:
+        response = client.get("/json/version")
+
+    assert response.status_code == 404
+    assert "path=/json/version" not in capsys.readouterr().out
+
+
 def test_websocket_connections_are_not_logged_as_http(
     capsys: pytest.CaptureFixture[str],
 ) -> None:

@@ -8,6 +8,17 @@ from app.main import create_app
 from tests.conftest import get_test_database_url
 
 
+def test_root_points_at_health_and_docs(client: TestClient) -> None:
+    response = client.get("/")
+
+    assert response.status_code == 200
+    assert response.json() == {
+        "service": "tzamot-api",
+        "health": "/health",
+        "docs": "/docs",
+    }
+
+
 def test_health(client: TestClient) -> None:
     response = client.get("/health")
 

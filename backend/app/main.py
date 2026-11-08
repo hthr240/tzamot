@@ -54,6 +54,16 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_headers=["*"],
     )
     app.include_router(health_router)
+
+    @app.get("/")
+    def root() -> dict[str, str]:
+        """Point browsers at real API URLs instead of returning a bare 404."""
+        return {
+            "service": "tzamot-api",
+            "health": "/health",
+            "docs": "/docs",
+        }
+
     return app
 
 

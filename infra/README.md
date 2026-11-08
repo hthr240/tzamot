@@ -1,8 +1,9 @@
 # Infrastructure
 
 This directory owns local and future production runtime configuration.
-Only the local PostgreSQL service is implemented. The API, UI, migrations,
-and app launcher remain later tickets.
+Local PostgreSQL is implemented here. For the full local stack (DB,
+migrations, API, frontend), use `dev-up.cmd` / `dev-up.sh` from the repository
+root — see [Local setup → Daily routine](../docs/development/local-setup.md#daily-routine).
 
 ## Local database
 

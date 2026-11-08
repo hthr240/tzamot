@@ -29,8 +29,8 @@ The layout below is the **target**, not an inventory of implemented modules.
 The FastAPI application factory, health endpoint, settings, database sessions,
 SQLAlchemy models, Alembic baseline, production backend image, and backend CI
 workflow are ready.
-Feature routes, booking UI, production Compose, and the app launcher are still
-later tickets. The frontend shell and local CORS middleware are ready.
+Feature routes, booking UI, and production Compose are still later tickets.
+The frontend shell, local CORS middleware, and `dev-up` launcher are ready.
 
 ## Repository layout
 
@@ -91,11 +91,15 @@ tzamot/
 │   └── README.md                   local database runbook; production comes later
 │
 ├── compose.yaml                    default development entry point; imports infra/
+├── dev-up.cmd / dev-up.ps1         ✅ Windows local stack launcher
+├── dev-up.sh                       ✅ macOS/Linux local stack launcher
+├── justfile                        ✅ optional wrappers (`just up`, `just down`)
 ├── docs/                           ✅ this site
 ├── mkdocs.yml                      ✅
 ├── .gitignore                      ✅
 └── README.md                       ✅
 ```
+
 
 ## Conventions
 
@@ -122,10 +126,8 @@ tzamot/
 | Test | `cd backend && uv run pytest` |
 | Lint / format | `cd backend && uv run ruff check . && uv run black --check .` |
 | Serve frontend | `cd frontend && python -m http.server 5500` (or Live Server) |
+| Start full local stack | `.\dev-up.cmd` / `./dev-up.sh` (optional `--seed`) |
 | Serve docs | `mkdocs serve` |
-
-!!! tip
-    A `Makefile` / `justfile` wrapping these is a nice Sprint 1 stretch goal.
 
 ## Monorepo vs. multi-repo (for the record)
 
