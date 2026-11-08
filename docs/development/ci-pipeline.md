@@ -7,6 +7,10 @@ The `backend` check is required to merge into `main` (#31). A pull request
 with a failing or missing run cannot merge. Peer approvals stay at zero
 while development is solo.
 
+Verified on 2026-11-08: PR #52 merged with a green `backend` run; a
+docs-only change on PR #53 still started `backend`; a deliberate failing
+test left PR #53 blocked until the failure was reverted.
+
 ## What it does
 
 ```mermaid
