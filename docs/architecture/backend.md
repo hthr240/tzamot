@@ -76,6 +76,10 @@ and validation errors keep their existing 4xx responses. See
 [Unexpected errors](../development/logging.md#unexpected-errors) for response
 format and already-started response limits.
 
+`CORSMiddleware` reads `settings.cors_origins` (`CORS_ORIGINS`). Local defaults
+are `http://127.0.0.1:5500` and `http://localhost:5500`, so the static shell can
+call the API from Live Server or `python -m http.server`.
+
 ## API surface (MVP)
 
 The exact paths are finalised during Sprints 2–3. The resources are fixed:

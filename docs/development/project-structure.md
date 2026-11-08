@@ -30,8 +30,7 @@ The FastAPI application factory, health endpoint, settings, database sessions,
 SQLAlchemy models, Alembic baseline, production backend image, and backend CI
 workflow are ready.
 Feature routes, booking UI, production Compose, and the app launcher are still
-later tickets. The frontend shell (`index.html`, `admin.html`, config, and API
-helper) is ready; CORS for the browser call is #29.
+later tickets. The frontend shell and local CORS middleware are ready.
 
 ## Repository layout
 

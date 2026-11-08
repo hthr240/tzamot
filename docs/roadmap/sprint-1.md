@@ -30,7 +30,7 @@ data (#16), CI (#22), and the frontend shell (#27).
 - [x] Initialise the FastAPI project with `uv init` → `pyproject.toml` + `uv.lock` (Python 3.13) — #8
 - [x] `backend/.env.example` with all config keys and typed settings loading — #9; see [Environments → Configuration](../architecture/environments.md#configuration-per-environment)
 - [x] FastAPI app factory, environment-aware docs, and `/health` endpoint — #10
-- [x] Frontend shell served locally on port 5500 — #28; browser call without CORS errors is #29
+- [x] Frontend shell served locally on port 5500, calling the local API without CORS errors — #28 · #29
 - [ ] One-command launcher for the DB, migrations, API, and frontend; documented stop procedure — #11
 
 ### Structured logging
