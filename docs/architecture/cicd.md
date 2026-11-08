@@ -184,5 +184,5 @@ Pages settings: root directory `frontend/`, no build command, production branch 
 - [ ] Add `VPS_HOST`, `VPS_USER` secrets
 - [ ] On the VPS: `mkdir /opt/tzamot`, copy `docker-compose.prod.yml` + `Caddyfile`, create `.env` by hand
 - [ ] First deploy manually (`docker compose up -d`) so Caddy obtains certificates; subsequent deploys via Actions
-- [ ] Mark `backend` (CI) as a required status check on `main`
+- [x] Mark `backend` (CI) as a required status check on `main` — #31
 - [ ] Connect repo to Cloudflare Pages

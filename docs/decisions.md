@@ -107,10 +107,11 @@ developer with repository access. We want PR-based development without requiring
 an impossible self-approval or a backend check that has not been implemented.
 
 **Decision.** Protect `main` with PRs required, including for administrators;
-zero required peer approvals while solo; no force-pushes or branch deletion;
-and no required status checks yet. The user inspects and merges PRs. The
-assistant must explain each work phase and obtain approval before acting,
-and must not merge without an explicit request.
+zero required peer approvals while solo; no force-pushes or branch deletion.
+As of 2026-11-08 (#31), merging also requires the `backend` status check from
+`.github/workflows/ci.yml` to pass. The user
+inspects and merges PRs. The assistant must explain each work phase and
+obtain approval before acting, and must not merge without an explicit request.
 
 **Why.** This prevents direct changes to `main` through normal pushes while
 allowing a solo owner to merge reviewed work. Requiring the path-filtered Docs
@@ -122,10 +123,10 @@ to formally approve their own PR. The user-controlled merge boundary is a
 working agreement. Anyone with administrative access can change protection
 settings; administrator enforcement applies to the branch update rules.
 
-**Revisit when:** the second developer joins, require one peer approval;
-when #24 provides a backend check that reports on every PR, enable it through
-the existing #31 follow-up. No new issue or paid infrastructure is needed for
-the initial policy. See [Git workflow](development/workflow.md#branch-protection-on-main).
+**Revisit when:** the second developer joins, require one peer approval.
+The `backend` check is already required and reports on every pull request,
+including docs-only changes. See
+[Git workflow](development/workflow.md#branch-protection-on-main).
 
 ---
 

@@ -52,7 +52,7 @@ data (#16), CI (#22), and the frontend shell (#27).
 ### CI pipelines
 
 - [x] `.github/workflows/ci.yml`: `uv sync` → Ruff → Black → PostgreSQL service container → `alembic upgrade head` → seed → `pytest` → `docker build` — #24; see [CI pipeline](../development/ci-pipeline.md)
-- [ ] Require the `backend` status check only after it reports on every PR — #31, blocked by #24 and #25
+- [x] Require the `backend` status check only after it reports on every PR — #31; see [Workflow](../development/workflow.md#branch-protection-on-main)
 - [x] `backend/Dockerfile` (`python:3.13-slim` + uv, non-root runtime) — #23; see [Backend → Dockerfile](../architecture/backend.md#dockerfile)
 - [x] `.github/workflows/docs.yml` publishes this site
 

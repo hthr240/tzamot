@@ -2,8 +2,9 @@
 
 The backend quality gate lives in `.github/workflows/ci.yml` (#24).
 It runs on every pull request and on every push to `main`.
-Requiring that check before merge is a separate follow-up in
-[#31](https://github.com/hthr240/tzamot/issues/31).
+The `backend` check is required to merge into `main` (#31). A pull request
+with a failing or missing run cannot merge. Peer approvals stay at zero
+while development is solo.
 
 ## What it does
 
@@ -112,8 +113,9 @@ flowchart LR
     ```
 
     There is no path filter, so a docs-only pull request still gets a `backend`
-    result. Infrastructure changes are covered for the same reason. #31 can
-    require that check without leaving unrelated pull requests waiting.
+    result. Infrastructure changes are covered for the same reason. That is
+    why `backend` can be required: a pull request is not left waiting for a
+    workflow that never started.
 
     Pytest reads `TEST_DATABASE_URL`, not `DATABASE_URL`, so both point at the
     service database. `setup-uv` uses `backend/` because `pyproject.toml` and
