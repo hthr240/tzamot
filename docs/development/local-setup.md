@@ -84,10 +84,27 @@ cd backend
 uv sync
 ```
 
-`uv sync` creates `backend/.venv/`, installs everything from `uv.lock` (runtime **and** dev tools: pytest, ruff, black), and takes a few seconds.
+`uv sync` creates `backend/.venv/`, installs everything from `uv.lock` (runtime
+**and** dev tools: pytest, ruff, black, pre-commit), and takes a few seconds.
 
 !!! tip "Point your IDE at `backend/.venv`"
     VS Code: *Python: Select Interpreter* → `backend/.venv/bin/python` (Windows: `backend\.venv\Scripts\python.exe`). PyCharm: *Add Interpreter → Existing*. Then breakpoints and autocomplete work.
+
+Optional: install Git hooks so Ruff and Black run before every commit. The
+config lives under `backend/`; install it from the **repository root** with that
+path spelled out:
+
+```powershell
+uv run --directory backend pre-commit install --config backend/.pre-commit-config.yaml
+```
+
+Run the hooks against the whole tree once to confirm they pass:
+
+```powershell
+uv run --directory backend pre-commit run --all-files --config backend/.pre-commit-config.yaml
+```
+
+Skip this if you prefer to run Ruff and Black by hand; CI still enforces them.
 
 You can either prefix commands with `uv run …` (no activation needed) or activate the venv the classic way:
 

@@ -134,7 +134,15 @@ Run the same checks before pushing (from `backend/`):
 uv run ruff check . && uv run black --check . && uv run pytest
 ```
 
-Consider a `pre-commit` config (Sprint 1 stretch goal) so Ruff and Black run on every commit automatically.
+Optional pre-commit hooks (#26) run Ruff (with `--fix`) and Black before each
+commit. Config: `backend/.pre-commit-config.yaml`. Install from the repository
+root:
+
+```powershell
+uv run --directory backend pre-commit install --config backend/.pre-commit-config.yaml
+```
+
+See [Local setup → Python environment](local-setup.md#3-python-environment).
 
 ## Beyond CI: deployment
 
