@@ -106,7 +106,7 @@ tzamot/
 | **Frontend has no build step** | Plain files; Cloudflare Pages serves `frontend/` as-is. |
 | **Commit `uv.lock`** | It is what makes local, CI, and Docker installs identical. |
 | **Commit `.env.example`, never `.env`** | Enforced by `.gitignore`. |
-| **Do not require a skipped workflow** | Docs uses path filters. A future required backend check must report on every PR; see [CI pipeline](ci-pipeline.md). Production deploy is deferred to Sprint 4. |
+| **Do not require a skipped workflow** | Docs uses path filters, so it is not required. The `backend` check has no path filter and is required on `main`; see [CI pipeline](ci-pipeline.md). Production deploy is deferred to Sprint 4. |
 
 ## Everyday commands (from the repo root)
 
