@@ -124,13 +124,12 @@ The active policy is visible under repository **Settings → Branches → main**
 | Require PRs before merging | Yes, including administrators | Keep |
 | Required peer approvals | Zero; self-approval is not possible | One when the second developer joins |
 | Force-push and branch deletion | Block | Keep |
-| Required backend check | Workflow runs on every PR; the check is not required | Require it through [#31](https://github.com/hthr240/tzamot/issues/31) |
+| Required backend check | `backend` must pass (#31) | Keep; peer approval is a separate setting |
 | Admin bypass | Disabled | Keep |
 
 Do not require the path-filtered **Docs** workflow on every PR: files outside
-its paths do not trigger it. The backend workflow reports a result on every
-PR, including docs-only changes. Requiring that check is
-[#31](https://github.com/hthr240/tzamot/issues/31). See the
+its paths do not trigger it. The `backend` check is required. It reports a
+result on every PR, including docs-only changes. See the
 [CI pipeline](ci-pipeline.md).
 
 With zero required peer approvals, the owner can inspect a PR and click Merge

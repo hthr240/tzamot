@@ -3,7 +3,7 @@
 How code moves from a developer's laptop to production, and what checks it passes on the way.
 
 !!! info "Design, not current deployment"
-    The backend CI workflow runs on every pull request and on pushes to `main`.
+    The backend CI workflow runs on pull requests targeting `main`.
     Image publishing, the production Environment, deployment secrets, and SSH
     delivery are deferred to Sprint 4. No paid hosting or domain is needed
     before local MVP readiness.
@@ -184,5 +184,5 @@ Pages settings: root directory `frontend/`, no build command, production branch 
 - [ ] Add `VPS_HOST`, `VPS_USER` secrets
 - [ ] On the VPS: `mkdir /opt/tzamot`, copy `docker-compose.prod.yml` + `Caddyfile`, create `.env` by hand
 - [ ] First deploy manually (`docker compose up -d`) so Caddy obtains certificates; subsequent deploys via Actions
-- [ ] Mark `backend` (CI) as a required status check on `main`
+- [x] Mark `backend` (CI) as a required status check on `main` — #31
 - [ ] Connect repo to Cloudflare Pages

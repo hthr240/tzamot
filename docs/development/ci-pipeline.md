@@ -1,9 +1,11 @@
 # CI Pipeline
 
 The backend quality gate lives in `.github/workflows/ci.yml` (#24).
-It runs on every pull request and on every push to `main`.
-Requiring that check before merge is a separate follow-up in
-[#31](https://github.com/hthr240/tzamot/issues/31).
+It runs when a pull request targeting `main` is opened, when new commits
+are pushed to that pull request, and when the pull request is reopened.
+The `backend` check is required to merge into `main` (#31). A pull request
+with a failing or missing run cannot merge. Peer approvals stay at zero
+while development is solo.
 
 ## What it does
 
@@ -27,7 +29,7 @@ flowchart LR
 | **Format** | `uv run black --check .` | Any file isn't Black-formatted |
 | **Ephemeral DB** | GitHub Actions **service container** `postgres:16` with a health check | DB fails to start |
 | **Migrate** | `uv run alembic upgrade head` | A migration is broken or missing |
-| **Seed** | `uv run python scripts/seed_test_db.py` | Seed script fails (often = model/migration mismatch) |
+| **Seed** | `uv run python -m scripts.seed_test_db` | Seed script fails (often = model/migration mismatch) |
 | **Test** | `uv run pytest -v` | Any test fails |
 | **Docker build** | `docker build -t tzamot-api:ci .` from `backend/` (not pushed) | `Dockerfile` is broken — caught before merge, so deploys never fail on build |
 
@@ -47,9 +49,9 @@ flowchart LR
     name: CI
 
     on:
-      push:
-        branches: [main]
       pull_request:
+        branches: [main]
+        types: [opened, synchronize, reopened]
 
     jobs:
       backend:
@@ -102,7 +104,7 @@ flowchart LR
             run: uv run alembic upgrade head
 
           - name: Seed test database
-            run: uv run python scripts/seed_test_db.py
+            run: uv run python -m scripts.seed_test_db
 
           - name: Tests
             run: uv run pytest -v
@@ -112,8 +114,9 @@ flowchart LR
     ```
 
     There is no path filter, so a docs-only pull request still gets a `backend`
-    result. Infrastructure changes are covered for the same reason. #31 can
-    require that check without leaving unrelated pull requests waiting.
+    result. Infrastructure changes are covered for the same reason. That is
+    why `backend` can be required: a pull request is not left waiting for a
+    workflow that never started.
 
     Pytest reads `TEST_DATABASE_URL`, not `DATABASE_URL`, so both point at the
     service database. `setup-uv` uses `backend/` because `pyproject.toml` and

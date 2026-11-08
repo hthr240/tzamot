@@ -52,7 +52,7 @@ data (#16), CI (#22), and the frontend shell (#27).
 ### CI pipelines
 
 - [x] `.github/workflows/ci.yml`: `uv sync` → Ruff → Black → PostgreSQL service container → `alembic upgrade head` → seed → `pytest` → `docker build` — #24; see [CI pipeline](../development/ci-pipeline.md)
-- [ ] Require the `backend` status check only after it reports on every PR — #31, blocked by #24 and #25
+- [x] Require the `backend` status check only after it reports on every PR — #31; see [Workflow](../development/workflow.md#branch-protection-on-main)
 - [x] `backend/Dockerfile` (`python:3.13-slim` + uv, non-root runtime) — #23; see [Backend → Dockerfile](../architecture/backend.md#dockerfile)
 - [x] `.github/workflows/docs.yml` publishes this site
 
@@ -69,6 +69,15 @@ writing or testing the app locally. Do not buy hosting or a domain before MVP re
 - [x] Define CI/CD: GitHub Actions → GHCR → approval → SSH — [CI/CD](../architecture/cicd.md), [ADR-005](../decisions.md#adr-005-deploy-via-github-actions-ghcr-ssh), [ADR-006](../decisions.md#adr-006-manual-approval-before-production)
 - [x] Python 3.13 + uv — [ADR-002](../decisions.md#adr-002-python-313), [ADR-004](../decisions.md#adr-004-uv-pyprojecttoml-for-dependencies)
 - [x] Secrets handling per environment — [Environments → Where secrets live](../architecture/environments.md#where-secrets-live)
+
+## Mid-sprint discoveries
+
+Defects found outside the planned queue use their own issues. See
+[Task management → Mid-sprint discoveries](../development/task-management.md#mid-sprint-discoveries).
+
+| Issue | Found after | Summary |
+|---|---|---|
+| [#51](https://github.com/hthr240/tzamot/issues/51) | #24 | CI seed could not import `app`; model test collided with seeded dates |
 
 ## Definition of done
 

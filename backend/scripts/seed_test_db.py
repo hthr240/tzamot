@@ -2,7 +2,10 @@
 
 Run from ``backend/``:
 
-    uv run python scripts/seed_test_db.py
+    uv run python -m scripts.seed_test_db
+
+The ``-m`` form puts ``backend/`` on the import path, so ``app`` can be
+imported.
 
 The script replaces rows in the domain tables, then inserts the same set again.
 Running it twice leaves the same row counts. Dates are fixed, not "today", so

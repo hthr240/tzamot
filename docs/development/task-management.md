@@ -158,6 +158,25 @@ Sprint 1 has no fixed deadline. Close its milestone only when its goal and
 required work are complete. Backend, frontend, and local infrastructure come
 first; no VPS or domain purchase is needed before MVP readiness.
 
+### Mid-sprint discoveries
+
+When a defect or gap appears while working a planned ticket, and it is **not**
+part of that ticket's acceptance criteria, do not hide it inside the original
+issue or rename the branch to the next queue item.
+
+1. Open a new issue with the matching kind label (`bug` when something is
+   broken, otherwise `task`).
+2. Set the area label, the current sprint milestone, and the Tzamot project.
+3. Write reproduction steps or a clear scope, plus acceptance criteria.
+4. Link the planned ticket it came from (for example "found after #24").
+5. Put the new issue on the board. Decide whether it blocks the next planned
+   ticket before continuing the work queue.
+6. Branch and open the PR against **that** new issue number, not the original
+   planned ticket and not the next queue item.
+
+This rule applies in every sprint. Example: [#51](https://github.com/hthr240/tzamot/issues/51)
+covers CI failures found after #24 closed.
+
 ## Issue and PR templates
 
 **Issues → New issue** offers three forms once the templates are merged to `main`:

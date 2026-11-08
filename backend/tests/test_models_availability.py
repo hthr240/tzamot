@@ -40,7 +40,10 @@ def test_availability_day_with_windows_create_and_read(
         tables=[AvailabilityDay.__table__, Availability.__table__],
     )
 
-    day = AvailabilityDay(date=date(2026, 11, 8), confirmed=False)
+    # Stay outside the CI seed window (1–14 November 2026) so this create/read
+    # test does not collide with committed seed rows.
+    day_date = date(2026, 12, 1)
+    day = AvailabilityDay(date=day_date, confirmed=False)
     morning = Availability(
         date=day.date,
         start_time=time(9, 0),
@@ -54,14 +57,14 @@ def test_availability_day_with_windows_create_and_read(
     db_session.add_all([day, morning, afternoon])
     db_session.flush()
 
-    loaded_day = db_session.get(AvailabilityDay, date(2026, 11, 8))
+    loaded_day = db_session.get(AvailabilityDay, day_date)
     assert loaded_day is not None
     assert loaded_day.confirmed is False
     assert len(loaded_day.windows) == 2
 
     windows = db_session.scalars(
         select(Availability)
-        .where(Availability.date == date(2026, 11, 8))
+        .where(Availability.date == day_date)
         .order_by(Availability.start_time)
     ).all()
     assert windows[0].start_time == time(9, 0)

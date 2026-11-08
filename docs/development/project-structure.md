@@ -117,7 +117,7 @@ tzamot/
 | Install backend deps | `cd backend && uv sync` |
 | Run API | `cd backend && uv run uvicorn app.main:app --reload` |
 | Migrate | `cd backend && uv run alembic upgrade head` |
-| Seed | `cd backend && uv run python scripts/seed_test_db.py` |
+| Seed | `cd backend && uv run python -m scripts.seed_test_db` |
 | Test | `cd backend && uv run pytest` |
 | Lint / format | `cd backend && uv run ruff check . && uv run black --check .` |
 | Serve frontend | `cd frontend && python -m http.server 5500` (or Live Server) |
