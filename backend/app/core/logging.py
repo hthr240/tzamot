@@ -15,6 +15,20 @@ from app.core.config import LogLevel
 request_id_context: ContextVar[str] = ContextVar("request_id", default="-")
 logger = logging.getLogger(__name__)
 
+# Browser and IDE probes that are not real API traffic.
+_QUIET_PATH_PREFIXES = ("/json",)
+_QUIET_PATHS = frozenset({"/favicon.ico"})
+
+
+def is_quiet_request_path(path: str) -> bool:
+    """Return True for probe paths that should stay out of the console."""
+    if path in _QUIET_PATHS:
+        return True
+    return any(
+        path == prefix or path.startswith(f"{prefix}/")
+        for prefix in _QUIET_PATH_PREFIXES
+    )
+
 
 class RequestIdFilter(logging.Filter):
     """Attach the current request ID to every record sent to the console."""
@@ -24,13 +38,28 @@ class RequestIdFilter(logging.Filter):
         return True
 
 
+class QuietProbeFilter(logging.Filter):
+    """Drop access lines for browser/IDE probes such as ``/json/version``."""
+
+    def filter(self, record: logging.LogRecord) -> bool:
+        message = record.getMessage()
+        if "path=/json" in message or "path=/favicon.ico" in message:
+            return False
+        if '"GET /json/' in message or '"GET /favicon.ico"' in message:
+            return False
+        return True
+
+
 def configure_logging(level: LogLevel) -> None:
     """Configure one stdout handler shared by the API and Uvicorn."""
     dictConfig(
         {
             "version": 1,
             "disable_existing_loggers": False,
-            "filters": {"request_id": {"()": RequestIdFilter}},
+            "filters": {
+                "request_id": {"()": RequestIdFilter},
+                "quiet_probes": {"()": QuietProbeFilter},
+            },
             "formatters": {
                 "console": {
                     "format": (
@@ -45,7 +74,7 @@ def configure_logging(level: LogLevel) -> None:
                     "class": "logging.StreamHandler",
                     "stream": "ext://sys.stdout",
                     "formatter": "console",
-                    "filters": ["request_id"],
+                    "filters": ["request_id", "quiet_probes"],
                     "level": level,
                 }
             },
@@ -71,6 +100,8 @@ class RequestLoggingMiddleware:
             await self.app(scope, receive, send)
             return
 
+        path = scope["path"]
+        quiet = is_quiet_request_path(path)
         request_id = uuid4().hex
         token = request_id_context.set(request_id)
         scope.setdefault("state", {})["request_id"] = request_id
@@ -86,21 +117,25 @@ class RequestLoggingMiddleware:
             await send(message)
 
         try:
-            logger.debug(
-                "request.started method=%s path=%s", scope["method"], scope["path"]
-            )
+            if not quiet:
+                logger.debug(
+                    "request.started method=%s path=%s",
+                    scope["method"],
+                    path,
+                )
             await self.app(scope, receive, send_with_request_id)
             completed = True
         finally:
             # The global handler processes failures after request context is reset.
             try:
-                logger.info(
-                    "%s method=%s path=%s status=%s duration_ms=%.3f",
-                    "request.completed" if completed else "request.failed",
-                    scope["method"],
-                    scope["path"],
-                    status,
-                    (perf_counter() - started) * 1000,
-                )
+                if not quiet:
+                    logger.info(
+                        "%s method=%s path=%s status=%s duration_ms=%.3f",
+                        "request.completed" if completed else "request.failed",
+                        scope["method"],
+                        path,
+                        status,
+                        (perf_counter() - started) * 1000,
+                    )
             finally:
                 request_id_context.reset(token)
