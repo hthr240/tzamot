@@ -4,6 +4,7 @@ from collections.abc import AsyncGenerator
 from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
+from starlette.middleware.cors import CORSMiddleware
 
 from app.core.config import Settings
 from app.core.db import create_db_engine, create_session_factory
@@ -44,6 +45,14 @@ def create_app(settings: Settings | None = None) -> FastAPI:
     # FastAPI still uses its built-in handlers for HTTP errors and validation.
     app.add_exception_handler(Exception, handle_unhandled_exception)
     app.add_middleware(RequestLoggingMiddleware)
+    # Added last so it wraps the stack and answers browser preflight requests.
+    app.add_middleware(
+        CORSMiddleware,
+        allow_origins=app_settings.cors_origins,
+        allow_credentials=True,
+        allow_methods=["*"],
+        allow_headers=["*"],
+    )
     app.include_router(health_router)
     return app
 
