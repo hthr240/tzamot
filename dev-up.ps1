@@ -1,9 +1,11 @@
 #Requires -Version 5.1
 $ErrorActionPreference = "Stop"
 
+# PowerShell variable names are case-insensitive, so keep path and process
+# names distinct (Frontend vs frontend would collide).
 $Root = $PSScriptRoot
-$Backend = Join-Path $Root "backend"
-$Frontend = Join-Path $Root "frontend"
+$BackendDir = Join-Path $Root "backend"
+$FrontendDir = Join-Path $Root "frontend"
 $Seed = $false
 
 foreach ($arg in $args) {
@@ -73,7 +75,7 @@ if ($LASTEXITCODE -ne 0) {
 }
 
 Write-Host "Applying migrations..."
-Push-Location $Backend
+Push-Location $BackendDir
 try {
     & uv run alembic upgrade head
     if ($LASTEXITCODE -ne 0) {
@@ -92,26 +94,25 @@ finally {
     Pop-Location
 }
 
-$api = $null
-$frontend = $null
+$apiProcess = $null
+$frontendProcess = $null
 
 try {
     Write-Host "Starting API on http://127.0.0.1:8000 ..."
-    $api = Start-Process -FilePath "uv" -ArgumentList @(
+    $apiProcess = Start-Process -FilePath "uv" -ArgumentList @(
         "run", "uvicorn", "app.main:app", "--reload", "--host", "127.0.0.1", "--port", "8000"
-    ) -WorkingDirectory $Backend -PassThru -NoNewWindow
+    ) -WorkingDirectory $BackendDir -PassThru -NoNewWindow
 
     Write-Host "Starting frontend on http://127.0.0.1:5500 ..."
-    $frontendArgs = @()
     if ($pythonLauncher[0] -eq "py") {
-        $frontendArgs = @("-3", "-m", "http.server", "5500", "--bind", "127.0.0.1")
-        $frontend = Start-Process -FilePath "py" -ArgumentList $frontendArgs `
-            -WorkingDirectory $Frontend -PassThru -NoNewWindow
+        $frontendProcess = Start-Process -FilePath "py" -ArgumentList @(
+            "-3", "-m", "http.server", "5500", "--bind", "127.0.0.1"
+        ) -WorkingDirectory $FrontendDir -PassThru -NoNewWindow
     }
     else {
-        $frontendArgs = @("-m", "http.server", "5500", "--bind", "127.0.0.1")
-        $frontend = Start-Process -FilePath "python" -ArgumentList $frontendArgs `
-            -WorkingDirectory $Frontend -PassThru -NoNewWindow
+        $frontendProcess = Start-Process -FilePath "python" -ArgumentList @(
+            "-m", "http.server", "5500", "--bind", "127.0.0.1"
+        ) -WorkingDirectory $FrontendDir -PassThru -NoNewWindow
     }
 
     Write-Host ""
@@ -125,17 +126,17 @@ try {
     Write-Host ""
 
     while ($true) {
-        if ($api.HasExited) {
-            throw "The API process exited with code $($api.ExitCode)."
+        if ($apiProcess.HasExited) {
+            throw "The API process exited with code $($apiProcess.ExitCode)."
         }
-        if ($frontend.HasExited) {
-            throw "The frontend process exited with code $($frontend.ExitCode)."
+        if ($frontendProcess.HasExited) {
+            throw "The frontend process exited with code $($frontendProcess.ExitCode)."
         }
         Start-Sleep -Seconds 1
     }
 }
 finally {
-    foreach ($process in @($frontend, $api)) {
+    foreach ($process in @($frontendProcess, $apiProcess)) {
         if ($null -eq $process) {
             continue
         }
