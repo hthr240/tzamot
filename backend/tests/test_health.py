@@ -17,6 +17,7 @@ def test_health(client: TestClient) -> None:
         "env": "local",
         "database": "ok",
     }
+    assert False, "temporary deliberate CI failure for #31"
 
 
 def test_health_reports_database_error(monkeypatch: pytest.MonkeyPatch) -> None:
