@@ -27,7 +27,8 @@ The directory skeleton from #6 exists:
 
 The layout below is the **target**, not an inventory of implemented modules.
 The FastAPI application factory, health endpoint, settings, database sessions,
-SQLAlchemy models, Alembic baseline, and production backend image are ready.
+SQLAlchemy models, Alembic baseline, production backend image, and backend CI
+workflow are ready.
 Seed data, feature routes, UI files, production Compose, and the app launcher
 are still later tickets.
 
@@ -37,7 +38,7 @@ are still later tickets.
 tzamot/
 ├── .github/
 │   ├── workflows/
-│   │   ├── ci.yml                  🚧 lint · format · migrate · seed · test · docker build (PRs)
+│   │   ├── ci.yml                  ✅ lint · format · migrate · seed · test · docker build
 │   │   ├── deploy.yml              🚧 Sprint 4: image → GHCR → approval → SSH
 │   │   └── docs.yml                ✅ build + publish this site
 │   ├── ISSUE_TEMPLATE/            story.yml · task.yml · bug.yml

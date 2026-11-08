@@ -3,10 +3,10 @@
 How code moves from a developer's laptop to production, and what checks it passes on the way.
 
 !!! info "Design, not current deployment"
-    Only the Docs workflow exists today. Backend CI is Sprint 1 work; image
-    publishing, the production Environment, deployment secrets, and SSH delivery
-    are deferred to Sprint 4. No paid hosting or domain is needed before local
-    MVP readiness.
+    The backend CI workflow runs on every pull request and on pushes to `main`.
+    Image publishing, the production Environment, deployment secrets, and SSH
+    delivery are deferred to Sprint 4. No paid hosting or domain is needed
+    before local MVP readiness.
 
 - **CI** (Continuous Integration) — *automatic checking*: every push/PR is linted and tested on a throwaway GitHub server. Defined in [`ci.yml`](../development/ci-pipeline.md).
 - **CD** (Continuous Deployment) — *automatic shipping*: after a merge to `main`, GitHub builds the Docker image and — once a human clicks **approve** — installs it on the VPS. Defined in `deploy.yml` (this page).
