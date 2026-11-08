@@ -1,9 +1,9 @@
 # Local Setup
 
-!!! warning "API, DB, models, migrations, and seed ready; UI still planned"
-    Steps 2 through 6 and the basic API in step 7 work now. The frontend shell,
-    CI, and the app launcher remain later Sprint 1 tickets.
-    No VPS, domain, or production secrets are needed.
+!!! success "Local stack is ready"
+    After the first-time steps below, use `dev-up.cmd` (Windows) or `./dev-up.sh`
+    (macOS/Linux) for the daily routine. No VPS, domain, or production secrets
+    are needed.
 
 A standardised environment on every developer laptop that **mimics production without installing heavy databases on the host OS**. PostgreSQL runs in Docker; Python runs natively for fast iteration and full IDE debugging.
 
@@ -48,8 +48,9 @@ are all `tzamot`: fake local defaults, never production credentials.
 The root [compose.yaml](https://github.com/hthr240/tzamot/blob/main/compose.yaml)
 imports the [development configuration](https://github.com/hthr240/tzamot/blob/main/infra/docker-compose.dev.yml).
 Run the short commands from the repository root with current Docker Desktop
-and Compose `include` support. This starts the database only, not the future
-API/frontend launcher.
+and Compose `include` support. This starts the database only. Prefer
+[`dev-up`](#daily-routine) when you also want migrations, the API, and the
+frontend.
 
 The configuration defines project `tzamot-dev` and named volume `pg_dev_data` (normally
 `tzamot-dev_pg_dev_data`). Data survives both restarts and container recreation.
@@ -190,11 +191,49 @@ origins through `CORSMiddleware` and the default `CORS_ORIGINS` list.
 
 ## Daily routine
 
-```bash
-docker compose up -d --wait
-cd backend && uv run uvicorn app.main:app --reload       # API
-# + Live Server for the frontend
+From the repository root, one command starts PostgreSQL (waits until healthy),
+runs `alembic upgrade head`, then launches the API on `:8000` and the frontend
+on `:5500`:
+
+=== "Windows"
+
+    ```powershell
+    .\dev-up.cmd
+    .\dev-up.cmd --seed
+    ```
+
+=== "macOS / Linux"
+
+    ```bash
+    chmod +x dev-up.sh   # once after clone, if needed
+    ./dev-up.sh
+    ./dev-up.sh --seed
+    ```
+
+=== "Just (optional)"
+
+    ```bash
+    just up
+    just up --seed
+    just down
+    ```
+
+`--seed` runs `uv run python -m scripts.seed_test_db` after migrations.
+
+The launcher refuses to start if port `8000` or `5500` is already taken, and it
+prints a clear error if Docker or `uv` is missing. Press **Ctrl+C** to stop the
+API and the frontend static server. **The database keeps running and keeps its
+data.** Stop only the database with:
+
+```powershell
+docker compose down
 ```
+
+That does not delete the named volume. To wipe local data, use the reset
+commands below.
+
+You can still start each piece by hand (Compose, uvicorn, Live Server) when
+debugging a single layer.
 
 ## Adding a dependency
 
@@ -233,8 +272,8 @@ docker compose -p tzamot-dev down --volumes
 docker compose -p tzamot-dev up -d --wait
 ```
 
-After migrations and seeding exist, repeat steps 5 and 6 after a reset.
-Those backend commands are still planned. See the
+After a wipe, run migrations again (and seed if you want): `.\dev-up.cmd --seed`
+or steps 5 and 6 above. See the
 [infrastructure runbook](https://github.com/hthr240/tzamot/blob/main/infra/README.md)
 for stop and connection commands.
 
