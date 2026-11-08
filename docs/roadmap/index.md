@@ -29,7 +29,7 @@ flowchart LR
 
 | Sprint | Status |
 |---|---|
-| Sprint 1 | :hourglass_flowing_sand: Local database, basic health API and backend image ready; feature routes, frontend UI and backend CI still pending |
+| Sprint 1 | :hourglass_flowing_sand: Local database, health API, seed data, and backend CI are ready; feature routes, frontend UI, and the required backend check are still pending |
 | Sprint 2 | :white_circle: Not started |
 | Sprint 3 | :white_circle: Not started |
 | Sprint 4 | :white_circle: Not started |

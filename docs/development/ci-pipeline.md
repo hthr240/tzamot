@@ -1,8 +1,8 @@
 # CI Pipeline
 
-The backend quality gate is **planned in #24**, not implemented yet.
-Currently only the Docs workflow exists. This page describes the target
-`.github/workflows/ci.yml`; backend enforcement is a separate follow-up in
+The backend quality gate lives in `.github/workflows/ci.yml` (#24).
+It runs on every pull request and on every push to `main`.
+Requiring that check before merge is a separate follow-up in
 [#31](https://github.com/hthr240/tzamot/issues/31).
 
 ## What it does
@@ -28,8 +28,8 @@ flowchart LR
 | **Ephemeral DB** | GitHub Actions **service container** `postgres:16` with a health check | DB fails to start |
 | **Migrate** | `uv run alembic upgrade head` | A migration is broken or missing |
 | **Seed** | `uv run python scripts/seed_test_db.py` | Seed script fails (often = model/migration mismatch) |
-| **Test** | `uv run pytest` | Any test fails |
-| **Docker build** | `docker build backend/` (not pushed) | `Dockerfile` is broken — caught before merge, so deploys never fail on build |
+| **Test** | `uv run pytest -v` | Any test fails |
+| **Docker build** | `docker build -t tzamot-api:ci .` from `backend/` (not pushed) | `Dockerfile` is broken — caught before merge, so deploys never fail on build |
 
 ## Why seed the database?
 
@@ -40,18 +40,16 @@ flowchart LR
 
 `scripts/seed_test_db.py` is idempotent and deterministic (fixed dates relative to a frozen "today"), so tests can make exact assertions. Contents described in [Data model → Seed data](../architecture/data-model.md#seed-data-ci-local).
 
-## Reference workflow
+## Workflow
 
-??? example ".github/workflows/ci.yml (reference)"
+??? example ".github/workflows/ci.yml"
     ```yaml
     name: CI
 
     on:
       push:
         branches: [main]
-        paths: ["backend/**", ".github/workflows/ci.yml"]
       pull_request:
-        paths: ["backend/**", ".github/workflows/ci.yml"]
 
     jobs:
       backend:
@@ -76,6 +74,8 @@ flowchart LR
 
         env:
           DATABASE_URL: postgresql+psycopg://tzamot:tzamot@localhost:5432/tzamot_test
+          # Pytest ignores DATABASE_URL and reads TEST_DATABASE_URL.
+          TEST_DATABASE_URL: postgresql+psycopg://tzamot:tzamot@localhost:5432/tzamot_test
           ENV: ci
           TZ: Asia/Jerusalem
           ADMIN_TOKEN: ci-token
@@ -86,6 +86,8 @@ flowchart LR
           - uses: astral-sh/setup-uv@v5
             with:
               enable-cache: true
+              cache-dependency-glob: backend/uv.lock
+              working-directory: backend
 
           - name: Install dependencies (locked)
             run: uv sync --frozen
@@ -109,15 +111,13 @@ flowchart LR
             run: docker build -t tzamot-api:ci .
     ```
 
-    This reference is path-filtered. **Do not make it required as-is**: unrelated
-    PRs can be left waiting for a workflow that never ran. #24 must cover backend
-    and infrastructure changes and provide a stable result on every PR before
-    #31 enables the required check. Running the backend job on every PR is the
-    simplest option; if expensive work is conditional, the required result must
-    still be reported.
+    There is no path filter, so a docs-only pull request still gets a `backend`
+    result. Infrastructure changes are covered for the same reason. #31 can
+    require that check without leaving unrelated pull requests waiting.
 
-    `setup-uv` reads the Python requirement from `pyproject.toml`; dependency and
-    runtime setup must match the committed project configuration.
+    Pytest reads `TEST_DATABASE_URL`, not `DATABASE_URL`, so both point at the
+    service database. `setup-uv` uses `backend/` because `pyproject.toml` and
+    `uv.lock` are not in the repository root.
 
 ## Local parity
 
