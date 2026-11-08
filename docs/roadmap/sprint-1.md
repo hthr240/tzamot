@@ -55,6 +55,7 @@ data (#16), CI (#22), and the frontend shell (#27).
 - [x] Require the `backend` status check only after it reports on every PR — #31; see [Workflow](../development/workflow.md#branch-protection-on-main)
 - [x] `backend/Dockerfile` (`python:3.13-slim` + uv, non-root runtime) — #23; see [Backend → Dockerfile](../architecture/backend.md#dockerfile)
 - [x] `.github/workflows/docs.yml` publishes this site
+- [x] Optional pre-commit hooks for Ruff and Black — #26; see [CI pipeline → Local parity](../development/ci-pipeline.md#local-parity)
 
 ### Deferred to Sprint 4
 

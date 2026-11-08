@@ -67,6 +67,7 @@ tzamot/
 │   ├── .dockerignore               ✅ excludes local, test, and secret files
 │   ├── pyproject.toml              deps + [tool.ruff] [tool.black] [tool.pytest]
 │   ├── uv.lock                     locked versions — commit it
+│   ├── .pre-commit-config.yaml     ✅ optional Ruff + Black Git hooks (#26)
 │   └── .env.example                ✅ every config key with local defaults
 │
 ├── frontend/                       static shell ready; booking UI planned
