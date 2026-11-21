@@ -84,6 +84,12 @@ call the API from Live Server or `python -m http.server`.
 
 The exact paths are finalised during Sprints 2–3. The resources are fixed:
 
+=== "Admin probe"
+
+    | Method | Path | Who | Purpose |
+    |---|---|---|---|
+    | `GET` | `/admin/ping` | admin | Auth check; returns `{"status":"ok"}` |
+
 === "Services"
 
     | Method | Path | Who | Purpose |
@@ -115,8 +121,11 @@ The exact paths are finalised during Sprints 2–3. The resources are fixed:
     | `GET` | `/admin/appointments?from=&to=` | admin | Daily / weekly schedule |
     | `DELETE` | `/admin/appointments/{id}` | admin | Cancel — no time restriction |
 
-!!! warning "Admin authentication is undecided"
-    Routes under `/admin/*` need *some* protection beyond an unlisted URL. Decide in Sprint 2 (e.g. a static bearer token from an environment variable is the minimum viable option).
+!!! note "Admin authentication"
+    Every `/admin/*` route requires `Authorization: Bearer <ADMIN_TOKEN>`.
+    Missing or wrong tokens return **401**. Decision:
+    [ADR-011](../decisions.md#adr-011-static-admin_token-bearer-auth).
+    `GET /admin/ping` is a minimal protected probe used by tests and the admin UI.
 
 ## Configuration
 
@@ -129,7 +138,7 @@ All configuration comes from **environment variables** (12-factor). Never hard-c
 | `LOG_LEVEL` | `DEBUG` · `INFO` | See [Logging](../development/logging.md) |
 | `CORS_ORIGINS` | `https://tzamot.co.il` | Allowed frontend origins |
 | `TZ` | `Asia/Jerusalem` | Business timezone |
-| `ADMIN_TOKEN` | *secret* | Admin route protection (if that option is chosen) |
+| `ADMIN_TOKEN` | *secret* | Bearer token required on every `/admin/*` route |
 
 Locally these live in `backend/.env` (git-ignored, copied from `.env.example`). In production they live in `/opt/tzamot/.env` on the VPS. Full per-environment table on the [Environments](environments.md#configuration-per-environment) page.
 

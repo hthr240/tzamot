@@ -214,11 +214,38 @@ holiday pattern. Supersede this ADR rather than editing it.
 
 ---
 
+## ADR-011 · Static `ADMIN_TOKEN` bearer auth
+
+**Date:** 2026-11-21 · **Status:** ✅ Decided
+
+**Context.** Routes under `/admin/*` must not rely on an unlisted `admin.html`
+URL alone. The MVP needs something a solo admin can use from her phone without
+building accounts, OAuth, or email magic links.
+
+**Decision.** Protect every `/admin/*` route with
+`Authorization: Bearer <ADMIN_TOKEN>`. The token comes from the `ADMIN_TOKEN`
+environment variable (local `dev-token`, CI `ci-token`, production secret on
+the VPS). FastAPI applies a shared dependency on the admin router. See
+[Backend → API surface](architecture/backend.md#api-surface-mvp) and
+[Environments](architecture/environments.md#configuration-per-environment).
+
+**Why.** One shared secret matches the single-owner product, reuses config we
+already ship, and is enough until a second admin or stronger threat model
+appears. Constant-time comparison avoids leaking the token length via timing.
+
+**Trade-off.** Anyone who learns the token has full admin API access. The
+frontend must not commit the token; the admin enters or stores it locally
+(session/local storage) when calling `/admin/*`.
+
+**Revisit when:** more than one admin needs separate credentials, or the
+threat model requires rotation/expiry beyond editing the VPS `.env`.
+
+---
+
 ## Pending decisions
 
 | Topic | Options | Owner | Target |
 |---|---|---|---|
 | Domain name | `*.co.il` registrar | Team lead | Before Sprint 4 |
-| Admin authentication | Static `ADMIN_TOKEN` header vs something stronger | Both | Sprint 2 |
 | Slot granularity | 15 / 30 min | Both + owner | Sprint 3 |
 | Client cancellation lookup | Token link vs phone lookup | Both | Sprint 4 |

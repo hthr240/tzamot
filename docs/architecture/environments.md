@@ -46,7 +46,7 @@ All configuration is read from **environment variables** (12-factor). The same i
 | `LOG_LEVEL` | `DEBUG` | `INFO` | `INFO` |
 | `CORS_ORIGINS` | `http://127.0.0.1:5500,http://localhost:5500` | — | `https://tzamot.co.il` |
 | `TZ` | `Asia/Jerusalem` | `Asia/Jerusalem` | `Asia/Jerusalem` |
-| `ADMIN_TOKEN` | `dev-token` | `ci-token` | `<secret>` |
+| `ADMIN_TOKEN` | `dev-token` | `ci-token` | `<secret>` — required as `Authorization: Bearer …` on `/admin/*` ([ADR-011](../decisions.md#adr-011-static-admin_token-bearer-auth)) |
 | `POSTGRES_PASSWORD` *(db container)* | `tzamot` | `tzamot` | `<secret>` |
 
 `backend/.env.example` is the checked-in template listing every key with local defaults. Copy it to `.env`; never commit `.env`.

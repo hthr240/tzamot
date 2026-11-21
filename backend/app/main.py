@@ -10,6 +10,7 @@ from app.core.config import Settings
 from app.core.db import create_db_engine, create_session_factory
 from app.core.errors import handle_unhandled_exception
 from app.core.logging import RequestLoggingMiddleware, configure_logging
+from app.routers.admin import router as admin_router
 from app.routers.health import router as health_router
 
 
@@ -54,6 +55,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_headers=["*"],
     )
     app.include_router(health_router)
+    app.include_router(admin_router)
 
     @app.get("/")
     def root() -> dict[str, str]:
