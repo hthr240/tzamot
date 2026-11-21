@@ -62,37 +62,40 @@ def services_client(
 
 
 def test_list_services_returns_only_active(services_client: TestClient) -> None:
-    create = services_client.post(
+    # CI seeds realistic services; use unique names and assert filter behaviour.
+    inactive = services_client.post(
         "/admin/services",
         headers=ADMIN_HEADERS,
         json={
-            "name": "Box braids",
+            "name": "CI inactive twist",
             "duration_minutes": 240,
             "price": "600.00",
         },
     )
-    assert create.status_code == 201
-    service_id = create.json()["id"]
+    assert inactive.status_code == 201
+    inactive_id = inactive.json()["id"]
 
     services_client.patch(
-        f"/admin/services/{service_id}",
+        f"/admin/services/{inactive_id}",
         headers=ADMIN_HEADERS,
         json={"is_active": False},
     )
-    services_client.post(
+    active = services_client.post(
         "/admin/services",
         headers=ADMIN_HEADERS,
         json={
-            "name": "Touch-up",
+            "name": "CI active twist",
             "duration_minutes": 60,
             "price": "120.00",
         },
     )
+    assert active.status_code == 201
 
     response = services_client.get("/services")
     assert response.status_code == 200
     names = [row["name"] for row in response.json()]
-    assert names == ["Touch-up"]
+    assert "CI active twist" in names
+    assert "CI inactive twist" not in names
 
 
 def test_create_and_update_service_price(
@@ -136,12 +139,15 @@ def test_disable_service_hides_from_public_list(
         "/admin/services",
         headers=ADMIN_HEADERS,
         json={
-            "name": "Cornrows",
+            "name": "CI disable me",
             "duration_minutes": 180,
             "price": "450.00",
         },
     )
     service_id = created.json()["id"]
+    assert any(
+        row["id"] == service_id for row in services_client.get("/services").json()
+    )
 
     with caplog.at_level(logging.INFO, logger="app.routers.admin_services"):
         disabled = services_client.patch(
@@ -155,7 +161,7 @@ def test_disable_service_hides_from_public_list(
 
     listed = services_client.get("/services")
     assert listed.status_code == 200
-    assert listed.json() == []
+    assert all(row["id"] != service_id for row in listed.json())
 
 
 def test_create_requires_admin_token(services_client: TestClient) -> None:
