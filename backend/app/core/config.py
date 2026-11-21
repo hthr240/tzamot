@@ -37,7 +37,7 @@ class Settings(BaseSettings):
     )
     tz: str = "Asia/Jerusalem"
     # This is only a local placeholder. Production must provide a secret value.
-    admin_token: str = "dev-token"
+    admin_token: str = Field(default="dev-token", min_length=1)
 
     @field_validator("cors_origins", mode="before")
     @classmethod

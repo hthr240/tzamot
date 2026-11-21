@@ -10,8 +10,10 @@
     <main>
       <h1>ניהול</h1>
       <p>
-        מסך זמני. הגדרות השירותים והזמינות יגיעו בספרינט הבא. כתובת ה־API
-        נטענת מ־<code>js/config.js</code>.
+        מסך זמני. הגדרות השירותים והזמינות יגיעו בהמשך הספרינט. כתובת ה־API
+        נטענת מ־<code>js/config.js</code>. קריאות ל־<code>/admin/*</code>
+        דורשות את אותו <code>ADMIN_TOKEN</code> שב־<code>backend/.env</code>
+        כ־Bearer — בלי לשמור את הערך בקוד המאגר.
       </p>
       <section class="status" data-state="loading">
         <strong>API</strong>

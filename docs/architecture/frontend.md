@@ -42,6 +42,7 @@ stateDiagram-v2
 - The base URL differs per environment (`http://localhost:8000` locally, `https://api.tzamot.co.il` in production). `js/config.js` picks it by hostname.
 - Always show a **loading spinner** while a request is in flight.
 - Map API errors to **friendly Hebrew messages** — e.g. `409 Conflict` → "השעה הזו נתפסה הרגע, אנא בחרי שעה אחרת".
+- Admin calls under `/admin/*` must send `Authorization: Bearer <ADMIN_TOKEN>`. The token matches `ADMIN_TOKEN` in `backend/.env` locally (`dev-token` in `.env.example`) and must **never** be committed. Store it only in the browser (for example `sessionStorage`) after the owner enters it on `admin.html`. See [ADR-011](../decisions.md#adr-011-static-admin_token-bearer-auth).
 
 ## UI conventions
 
