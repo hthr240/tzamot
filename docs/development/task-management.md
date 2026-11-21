@@ -13,7 +13,7 @@ repository access and project access are separate.
 | User story | An issue labelled `story`, with acceptance criteria and task sub-issues. |
 | Task / sub-task | An issue labelled `task`, linked to its parent story. |
 | Bug | An issue labelled `bug`, with reproduction steps and expected behavior. |
-| Epic | An optional higher-level parent issue; not a separate layer in Sprint 1. |
+| Epic | An optional higher-level parent issue; not used as a separate layer for the MVP. |
 | Component | An area label such as `backend` or `infra`. |
 | Board | A Project view grouped into Status columns. |
 | Estimate | The Project's `Estimate` field, in approximate developer-days, not story points. |
@@ -39,20 +39,27 @@ flowchart LR
 | **Done** | Code merged to `main`, or non-code work verified and closed. | Issue-closed automation |
 
 Parent stories may be In Progress while their tasks move independently.
-Do not close a story just because one task merged.
+Do not close a story just because one task merged. Close the story only when its
+acceptance criteria and required sub-issues are done.
 
 ### Views and automation
 
 | View | Purpose |
 |---|---|
 | **Board** | Issues across milestones, in Status columns |
-| **Sprint 1** | Sprint 1 issues, in Status columns and grouped by parent story |
+| **Sprint 2** | Active sprint board — Status columns, grouped by parent story |
+| **Sprint 1 (done)** | Historical Sprint 1 board |
 | **Backlog** | Open issues with no milestone; currently it may be empty |
-| **Work queue** | Open tasks for the active sprint in the agreed execution order, without parent-story grouping |
+| **Work queue** | Open Sprint 2 `task` issues in `Execution order`, without parent-story grouping |
 
 **Milestone membership and Status are independent.** For example, an issue can
-belong to Sprint 1 while its Status is Backlog. The Backlog *view* instead filters
+belong to Sprint 2 while its Status is Backlog. The Backlog *view* instead filters
 for issues with no milestone. Views show issues, avoiding duplicate PR cards.
+
+**Stories on the Sprint 2 board:** keep parent stories visible (To Do / In Progress).
+Group the view by **Parent issue**. Move only **tasks** through
+In Progress → In Review → Done. When the first task of a story starts, move that
+story to In Progress. When the last required task closes, close the story.
 
 Auto-add, item-added, issue-closed, and issue-reopened behavior has been tested:
 new issues enter Backlog, closing moves them to Done, and reopening moves them
@@ -62,17 +69,19 @@ Auto-close is enabled too; only use Done for genuinely completed work.
 
 ### Execution order
 
-Start from the [Work queue](https://github.com/users/hthr240/projects/3/views/5).
+Start from the [Work queue](https://github.com/users/hthr240/projects/3/views/5)
+(or the [Sprint 2](https://github.com/users/hthr240/projects/3/views/7) board).
 Its `Execution order` number mirrors the manual row order. It is not the issue
-number, estimate, or an automatically calculated priority. The existing views
-are preserved. Completed tasks disappear from this view but keep their number.
+number, estimate, or an automatically calculated priority. Sort the Work queue
+table by **Execution order** ascending. Completed tasks disappear from this view
+but keep their number.
 
 Sprint 1 is complete (historical orders 1–21). Sprint 2 work queue:
 
 | Execution order | Task |
 |---|---|
-| 1 | #62 — admin `ADMIN_TOKEN` bearer auth for `/admin/*` |
-| 2 | #63 — services CRUD API, active-only list, logging, tests |
+| 1 | #62 — admin `ADMIN_TOKEN` bearer auth for `/admin/*` *(done)* |
+| 2 | #63 — services CRUD API, active-only list, logging, tests *(next)* |
 | 3 | #64 — availability windows API |
 | 4 | #65 — weekly confirmation and single-day materialised edits |
 | 5 | #66 — `api.js` loading indicator and Hebrew error mapping |
