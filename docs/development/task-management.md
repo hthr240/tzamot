@@ -48,7 +48,7 @@ Do not close a story just because one task merged.
 | **Board** | Issues across milestones, in Status columns |
 | **Sprint 1** | Sprint 1 issues, in Status columns and grouped by parent story |
 | **Backlog** | Open issues with no milestone; currently it may be empty |
-| **Work queue** | Open Sprint 1 tasks in the agreed execution order, without parent-story grouping |
+| **Work queue** | Open tasks for the active sprint in the agreed execution order, without parent-story grouping |
 
 **Milestone membership and Status are independent.** For example, an issue can
 belong to Sprint 1 while its Status is Backlog. The Backlog *view* instead filters
@@ -67,29 +67,19 @@ Its `Execution order` number mirrors the manual row order. It is not the issue
 number, estimate, or an automatically calculated priority. The existing views
 are preserved. Completed tasks disappear from this view but keep their number.
 
+Sprint 1 is complete (historical orders 1–21). Sprint 2 work queue:
+
 | Execution order | Task |
 |---|---|
-| 1 | #25 — initial solo branch protection and its documentation |
-| 2 | #6 — project skeleton |
-| 3 | #7 — local PostgreSQL |
-| 4 | #8 — Python/uv and development tools |
-| 5 | #9 — environment settings |
-| 6 | #10 — FastAPI health endpoint and first test |
-| 7 | #23 — backend Docker image |
-| 8 | #13 — logging library decision |
-| 9 | #14 — request logging |
-| 10 | #15 — exception logging |
-| 11 | #17 — weekly-hours model decision |
-| 12 | #18 — database sessions and test isolation |
-| 13 | #19 — database models |
-| 14 | #20 — migrations |
-| 15 | #21 — seed data |
-| 16 | #24 — backend CI |
-| 17 | #31 — require the available backend check |
-| 18 | #28 — frontend shell |
-| 19 | #29 — local CORS |
-| 20 | #11 — complete local launcher |
-| 21 | #26 — optional pre-commit stretch work |
+| 1 | #62 — admin `ADMIN_TOKEN` bearer auth for `/admin/*` |
+| 2 | #63 — services CRUD API, active-only list, logging, tests |
+| 3 | #64 — availability windows API |
+| 4 | #65 — weekly confirmation and single-day materialised edits |
+| 5 | #66 — `api.js` loading indicator and Hebrew error mapping |
+| 6 | #67 — admin UI base layout (mobile-first RTL) |
+| 7 | #68 — admin services UI |
+| 8 | #69 — admin availability week UI |
+| 9 | #70 — admin daily/weekly schedule views (empty until Sprint 3) |
 
 This sequence respects native prerequisite links. Do not invent dependencies
 just to force this order. Ask before changing the plan, then update both the
@@ -154,9 +144,9 @@ are verified; they do not need an empty branch or PR. See the
 - **Review** — demonstrate the milestone goal, close completed stories, and
   explicitly move unfinished work to the next milestone or unscheduled backlog.
 
-Sprint 1 has no fixed deadline. Close its milestone only when its goal and
-required work are complete. Backend, frontend, and local infrastructure come
-first; no VPS or domain purchase is needed before MVP readiness.
+Sprint milestones have no fixed deadline. Close a milestone only when its goal
+and required work are complete. Sprint 1 is closed. Backend, frontend, and
+local infrastructure come before any VPS or domain purchase.
 
 ### Mid-sprint discoveries
 

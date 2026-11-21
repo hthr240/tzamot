@@ -5,10 +5,13 @@
 backend, database, and frontend locally, run tests, and open a PR checked by CI.
 **Budget:** no paid infrastructure; no fixed due date.
 
-Track work in the [Sprint 1 milestone](https://github.com/hthr240/tzamot/milestone/1)
-and [Project](https://github.com/users/hthr240/projects/3). The six parent stories
-cover management (#1), local backend/database (#5), logging (#12), schema/seed
-data (#16), CI (#22), and the frontend shell (#27).
+**Status:** complete. Milestone
+[Sprint 1 — Foundation & Local Dev](https://github.com/hthr240/tzamot/milestone/1)
+is closed. Parent stories #1, #5, #12, #16, #22, and #27 are closed.
+
+Two logging checklist lines below stay unchecked on purpose: deeper process/DB
+debug logs and component-level ERROR/CRITICAL land when those components appear
+in later sprints. They did not block the Sprint 1 goal.
 
 ## Checklist
 
