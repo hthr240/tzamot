@@ -12,6 +12,7 @@ from app.core.errors import handle_unhandled_exception
 from app.core.logging import RequestLoggingMiddleware, configure_logging
 from app.routers.admin import router as admin_router
 from app.routers.health import router as health_router
+from app.routers.services import router as services_router
 
 
 def create_app(settings: Settings | None = None) -> FastAPI:
@@ -55,6 +56,7 @@ def create_app(settings: Settings | None = None) -> FastAPI:
         allow_headers=["*"],
     )
     app.include_router(health_router)
+    app.include_router(services_router)
     app.include_router(admin_router)
 
     @app.get("/")

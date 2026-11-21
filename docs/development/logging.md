@@ -116,7 +116,7 @@ Conventions:
 ## What must be logged (from the roadmap)
 
 - [x] Request start/end with method, path, status, duration — #14
-- [ ] Service **created** and **deleted / disabled** — Sprint 2
+- [x] Service **created**, **updated**, and **disabled** — #63
 - [ ] Booking process **start** and **end** — Sprint 3
 - [ ] Booking **validation failures** — e.g. *"User attempted to book an already taken slot"* — Sprint 3
 - [ ] Cancellation **refused** by the 24 h rule — Sprint 4

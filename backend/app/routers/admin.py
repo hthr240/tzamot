@@ -3,6 +3,7 @@
 from fastapi import APIRouter, Depends
 
 from app.core.auth import require_admin
+from app.routers.admin_services import router as admin_services_router
 
 # Router-level dependency covers every route mounted under this prefix.
 router = APIRouter(
@@ -10,6 +11,7 @@ router = APIRouter(
     tags=["admin"],
     dependencies=[Depends(require_admin)],
 )
+router.include_router(admin_services_router)
 
 
 @router.get("/ping")
