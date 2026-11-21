@@ -15,11 +15,11 @@ auth (#58), services API (#59), availability API (#60), admin UI (#61).
 
 ### Backend — Services API
 
-- [ ] CRUD endpoints for `services`: create, read, update, deactivate (name, duration in minutes, price) — #63; see [Backend → API surface](../architecture/backend.md#api-surface-mvp)
-- [ ] `GET /services` returns only **active** services — #63
-- [ ] Pydantic schemas with validation (`duration_minutes > 0`, `price >= 0`) — #63
-- [ ] **Logging:** `service.created`, `service.updated`, `service.disabled` — #63
-- [ ] Tests against the seeded DB — #63
+- [x] CRUD endpoints for `services`: create, read, update, deactivate (name, duration in minutes, price) — #63; see [Backend → API surface](../architecture/backend.md#api-surface-mvp)
+- [x] `GET /services` returns only **active** services — #63
+- [x] Pydantic schemas with validation (`duration_minutes > 0`, `price >= 0`) — #63
+- [x] **Logging:** `service.created`, `service.updated`, `service.disabled` — #63
+- [x] Tests against the seeded DB — #63
 
 ### Backend — Availability API
 
