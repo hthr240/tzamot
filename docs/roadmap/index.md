@@ -30,7 +30,7 @@ flowchart LR
 | Sprint | Status |
 |---|---|
 | Sprint 1 | :white_check_mark: Complete — local backend, DB, frontend shell, logging, schema/seed, and CI are on `main`; milestone closed |
-| Sprint 2 | :hourglass_flowing_sand: Ranked backlog ready (#58–#70); coding starts at #62 |
+| Sprint 2 | :hourglass_flowing_sand: In progress — #62 done; next is #63 (services API) |
 | Sprint 3 | :white_circle: Not started |
 | Sprint 4 | :white_circle: Not started |
 
